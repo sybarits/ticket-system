@@ -1,7 +1,8 @@
 # Ticket System for me
 
 
-add application.yml as 
+* add below where src/main/resources/application.yml
+```yaml
 spring:
   data:
     mongodb:
@@ -12,3 +13,6 @@ spring:
       password: "password"
       database: "db name"
       # uri: mongodb: //127.0.0.1:27017/cloud
+```
+
+* add OAUTH2.0 token where src/main.resources/client_secret_@@@@@.json
