@@ -75,4 +75,14 @@ public class QCloudTicketService implements TicketService {
         return result.collectList().block();
     }
 
+    @Override
+    public List<TicketDto> getTicket(String id) {
+        Flux<TicketDto> result = mongoTemplate.find(
+                Query.query(new Criteria().orOperator(
+                    Criteria.where("_id").is(id)
+                )),
+                TicketDto.class);
+        return result.collectList().block();
+    }
+
 }

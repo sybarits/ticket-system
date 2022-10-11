@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,9 +26,9 @@ public class TicketController {
         return qCloudTicket.getAllTickets();
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public List<TicketDto> ticketGet(@RequestBody RequestDto request) {
-        return qCloudTicket.getTickets(request);
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public List<TicketDto> ticketGet(@PathVariable("id") String id) {
+        return qCloudTicket.getTicket(id);
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT)
