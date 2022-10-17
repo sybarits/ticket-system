@@ -78,9 +78,9 @@ public class QCloudUserService implements UserService {
 
     @Override
     public List<UserDto> deleteUsers(RequestDto request) {
-        List<Integer> ids = new ArrayList<>();
+        List<String> ids = new ArrayList<>();
         for (UserDto user : request.getUserList()) {
-            ids.add(Integer.parseInt(user.get_id()));
+            ids.add(user.get_id());
         }
 
         Query query = new Query(Criteria.where("_id").in(ids));
@@ -96,6 +96,12 @@ public class QCloudUserService implements UserService {
                 )),
                 UserDto.class);
         return result.collectList().block();
+    }
+
+    @Override
+    public List<UserDto> uploadCSV(RequestDto request) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     
