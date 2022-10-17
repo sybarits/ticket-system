@@ -13,7 +13,6 @@ public class TicketDto {
 
     @Id
     private String _id;
-    private String ticket_id;
     private String user_id;
     private TicketType ticket_type;
     private String create_time;

@@ -5,5 +5,7 @@ public enum UserStatus {
     DEACTIVATE,
     INVITATIONSENT,
     INVITATIONEXPIRED,
+    APPLICATION,
+    REJECT,
 
 }

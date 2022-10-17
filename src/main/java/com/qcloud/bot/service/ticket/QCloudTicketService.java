@@ -14,8 +14,12 @@ import org.springframework.stereotype.Service;
 
 import com.qcloud.bot.model.RequestDto;
 import com.qcloud.bot.model.ticket.TicketDto;
+import com.qcloud.bot.model.ticket.TicketType;
+import com.qcloud.bot.model.user.UserDto;
+import com.qcloud.bot.model.user.UserStatus;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service("QCloudTicket")
 public class QCloudTicketService implements TicketService {
@@ -50,11 +54,21 @@ public class QCloudTicketService implements TicketService {
     @Override
     public List<TicketDto> putTickets(RequestDto request) {
         List<TicketDto> ticketList = request.getTicketList();
+        List<TicketDto> result = new ArrayList<TicketDto>();
         for (TicketDto ticket : ticketList) {
             ticket.setCreate_time(sdf.format(new Date()));
+            if (ticket.getTicket_type() == TicketType.USER) {
+                UserDto user = ticket.getUser();
+                user.setCreate_date(sdf.format(new Date()));
+                user.setStatus(UserStatus.APPLICATION);
+                Mono<UserDto> user_result = mongoTemplate.save(user);
+                ticket.setUser_id(user_result.block().get_id());
+                ticket.setUser(user_result.block());
+                Mono<TicketDto> ticket_result = mongoTemplate.save(ticket);
+                result.add(ticket_result.block());
+            }
         }
-        Flux<TicketDto> result = mongoTemplate.insertAll(ticketList);
-        return result.collectList().block();
+        return result;
     }
 
     @Override
@@ -65,9 +79,9 @@ public class QCloudTicketService implements TicketService {
 
     @Override
     public List<TicketDto> deleteTickets(RequestDto request) {
-        List<Integer> ids = new ArrayList<>();
+        List<String> ids = new ArrayList<>();
         for (TicketDto ticket : request.getTicketList()) {
-            ids.add(Integer.parseInt(ticket.get_id()));
+            ids.add(ticket.get_id());
         }
 
         Query query = new Query(Criteria.where("_id").in(ids));

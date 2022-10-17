@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,6 +25,12 @@ public class UserController {
     public List<UserDto> usersAllGet() {
         return qCloudUser.getAllUsers();
     }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public List<UserDto> ticketGet(@PathVariable("id") String id) {
+        return qCloudUser.getUser(id);
+    }
+
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public List<UserDto> usersGet(@RequestBody RequestDto request) {

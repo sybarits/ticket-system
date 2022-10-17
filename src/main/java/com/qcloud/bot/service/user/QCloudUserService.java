@@ -14,8 +14,10 @@ import org.springframework.stereotype.Service;
 
 import com.qcloud.bot.model.RequestDto;
 import com.qcloud.bot.model.user.UserDto;
+import com.qcloud.bot.model.user.UserStatus;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service("QCloudUser")
 public class QCloudUserService implements UserService {
@@ -51,11 +53,23 @@ public class QCloudUserService implements UserService {
         List<UserDto> userList = request.getUserList();
         for (UserDto user : userList) {
             user.setCreate_date(sdf.format(new Date()));
+            user.setStatus(UserStatus.APPLICATION);
         }
         Flux<UserDto> result = mongoTemplate.insertAll(userList);
         return result.collectList().block();
     }
 
+    @Override
+    public List<UserDto> putUser(RequestDto request) {
+        List<UserDto> userList = request.getUserList();
+        for (UserDto user : userList) {
+            user.setCreate_date(sdf.format(new Date()));
+            user.setStatus(UserStatus.APPLICATION);
+        }
+        Flux<UserDto> result = mongoTemplate.insertAll(userList);
+        return result.collectList().block();
+    }
+    
     @Override
     public List<UserDto> updateUsers(RequestDto request) {
         Flux<UserDto> result = Flux.fromIterable(request.getUserList()).flatMap(mongoTemplate::save);
@@ -73,5 +87,16 @@ public class QCloudUserService implements UserService {
         Flux<UserDto> result = mongoTemplate.findAllAndRemove(query, UserDto.class);
         return result.collectList().block();
     }
+
+    @Override
+    public List<UserDto> getUser(String id) {
+        Flux<UserDto> result = mongoTemplate.find(
+                Query.query(new Criteria().orOperator(
+                    Criteria.where("_id").is(id)
+                )),
+                UserDto.class);
+        return result.collectList().block();
+    }
+
     
 }
