@@ -39,8 +39,8 @@ function LeftSideMenu() {
                         <Link to={menu.path}
                             key={index}
                             style={{ color: "gray", textDecoration: "none" }}
-                            activeStyle={{ color: "black" }}>
-                            <dev> {menu.name} </dev>
+                            activestyle={{ color: "black" }}>
+                            <div> {menu.name} </div>
                         </Link>
                     );
                 })}

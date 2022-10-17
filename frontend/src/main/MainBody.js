@@ -1,13 +1,17 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './Home.js';
-import Tickets from './Tickets.js';
-import CloudUsers from './CloudUsers.js';
+import Tickets from './ticket/Tickets.js';
+import Ticket from './ticket/Ticket.js';
+import CloudUsers from './cloud_user/CloudUsers.js';
+import CloudUser from './cloud_user/CloudUser.js';
+import CloudUserInputs from './cloud_user/CloudUserInputs.js';
+import Chart from './statistics/chart.js';
 import NotFound from '../NotFound.js';
 import styled from "styled-components";
 
 const Body = styled.div`
   display: flex;
-  margin: 60px 0px 0px 0px;
+  margin: 0px 0px 0px 0px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -21,8 +25,12 @@ function MainBody() {
         <Body>
             <Routes>
                 <Route path="/" element={<Home />}></Route>
+                <Route path="/ticket/:ticketId" element={<Ticket />}></Route>
                 <Route path="/tickets/*" element={<Tickets />}></Route>
                 <Route path="/cloud_users/*" element={<CloudUsers />}></Route>
+                <Route path="/cloud_user/:userId" element={<CloudUser />}></Route>
+                <Route path="/cloud_user_input" element={<CloudUserInputs />}></Route>
+                <Route path="/chart/:chartType" element={<Chart />}></Route>
                 <Route path="*" element={<NotFound />}></Route>
             </Routes>
         </Body>
