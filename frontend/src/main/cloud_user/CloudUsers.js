@@ -27,7 +27,9 @@ function CloudUsers() {
         )
     }
 
-    
+    const refreshPage = (e) => {
+        window.location.reload(false);
+    }    
 
     const columnDefs = [
         { headerName: 'Cloud Type', field: 'cloud_service' },
@@ -38,6 +40,7 @@ function CloudUsers() {
         { headerName: 'Desc', field: 'desc' },
         {
             headerName: 'Action', field: 'create_time',
+            filter: false,
             cellRenderer: BtnCellRenderer,
             cellRendererParams: {
                 clicked: function (field) {
@@ -56,7 +59,7 @@ function CloudUsers() {
 
     const onGridReady = (params) => {
         const updateData = (data) => {
-            console.log("row data",data);
+            // console.log("row data",data);
             params.api.setRowData(data)
         };
         axios
@@ -67,9 +70,9 @@ function CloudUsers() {
     return (
         <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
             <h2>Cloud Users</h2>
-            <Stack spacing={2} direction="row" justifyContent="end">
+            <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }}>
                 <Button variant="outlined" href="/cloud_user_input">Add User</Button>
-                <Button variant="outlined">Refresh</Button>
+                <Button variant="outlined" onClick={refreshPage}>Refresh</Button>
             </Stack>
             <div className="ag-theme-alpine" style={{ width: '100%', height: 500, margin: '0 0 0 0' }}>
                 <AgGridReact

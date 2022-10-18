@@ -1,20 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import { Box, TextField, Stack, Button, Select, MenuItem } from '@mui/material';
 import * as XLSX from 'xlsx';
+import Config from '../config.js';
 
 function CloudUserInputs(props) {
 
-    const params = useParams();
-    const fileInput = React.useRef(null);
-    if (props.user != undefined) {
-        params.user = props.user;
-    }
+    const [disable, setDisable] = useState(false);
+    const [cloudService, setCloudService] = useState("IBMQ");
+    const [nameKo, setNameKo] = useState("");
+    const [nameUs, setNameUs] = useState("");
+    const [email, setEmail] = useState("");
+    const [status, setStatus] = useState("");
+    const [phone, setPhone] = useState("");
+    const [institution, setInstitution] = useState("");
+    const [major, setMajor] = useState("");
+    const [position, setPosition] = useState("");
+    const [adviser, setAdviser] = useState("");
+    const [usage, setUsage] = useState("");
+    const [quota, setQuota] = useState("");
+    const [applicationDate, setApplicationDate] = useState("");
+    const [createDate, setCreateDate] = useState("");
+    const [perpose, setPerpose] = useState("");
+    const [applicationRoute, setApplicationRoute] = useState("");
+    const [etc, setEtc] = useState("");
+    const [history, setHistory] = useState("");
+    const [privateInfo, setPrivateInfo] = useState("");
 
+    const fileInput = React.useRef(null);
     const ionqUserDataKey = {
         "-(학생 또는 연구원의 경우 해당 시) 지도교수:": "adviser",
         "날짜": "application_date",
@@ -38,17 +52,58 @@ function CloudUserInputs(props) {
         "유저아이디": "user_id",
     }
 
-    const uploadData = (params) => {
-        const resultData = (data) => {
-            console.log("complete upload data", data);
-        };
-        axios
-            .put("http://192.168.137.86:8080/user", { "userList": params })
-            .then(({ data }) => resultData(data));
+    const resultData = (data) => {
+        console.log("complete upload data", data);
     };
 
+    const uploadData = (data) => {
+        axios
+            .put(Config.getServiceUrl() + "/user", { "userList": data })
+            .then(({ data }) => {
+                resultData(data);
+                setDisable(false);
+            });
+    };
+
+    const refreshPage = (e) => {
+        window.location.reload(false);
+    }
+
     const handleOnSubmit = () => {
+        setDisable(true);
         fileInput.current.click();
+    }
+
+    const handleCloudSelectChange = (e) => {
+        console.log("select change e", e);
+        setCloudService(e.target.value);
+    }
+
+    const handleSaveNewUser = (e) => {
+        setDisable(true);
+        console.log("e", e);
+        const data = [{}];
+        data[0].cloud_service = cloudService;
+        data[0].name_ko = nameKo;
+        data[0].name_us = nameUs;
+        data[0].email = email;
+        data[0].status = status;
+        data[0].phone = phone;
+        data[0].institution = institution;
+        data[0].major = major;
+        data[0].position = position;
+        data[0].adviser = adviser;
+        data[0].usage = usage;
+        data[0].quota = quota;
+        data[0].application_date = applicationDate;
+        data[0].create_date = createDate;
+        data[0].perpose = perpose;
+        data[0].application_route = applicationRoute;
+        data[0].etc = etc;
+        data[0].history = history;
+        data[0].private_info = privateInfo;
+        // console.log("data",data);
+        uploadData(data);
     }
 
     const handleInputChange = (e) => {
@@ -66,7 +121,7 @@ function CloudUserInputs(props) {
                     }
                     return object;
                 }, {});
-                obj["cloud_service"] = "IONQ";
+                obj["cloud_service"] = cloudService;
                 return obj;
             });
 
@@ -83,253 +138,175 @@ function CloudUserInputs(props) {
 
     };
 
-    if (params.user != undefined || params.user != null) {
-        const user = params.user;
-        return (
-            <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
-                <Stack spacing={2} direction="row" justifyContent="end">
-                    <input type="file" accept={".xlsx"} ref={fileInput} onChange={handleInputChange} style={{ display: "none" }} />
-                    <Button onClick={(e) => { handleOnSubmit(e); }} variant="outlined">Upload xlsx</Button>
-                    <Button variant="outlined">Save</Button>
-                    <Button variant="outlined">Reset</Button>
-                </Stack>
-                <Box
-                    component="form"
-                    sx={{
-                        '& .MuiTextField-root': { m: 1 },
-                    }}
-                    noValidate
-                    autoComplete="off"
+    return (
+        <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
+            <Stack spacing={2} direction="row" justifyContent="end" sx={{m:1}} >
+                <Select
+                    id="cloud-servie-select"
+                    value={"IBMQ"}
+                    label="Cloud Service"
+                    onChange={handleCloudSelectChange}
                 >
-                    <div>
-                        <TextField
-                            id="cloud_service"
-                            label="Cloud Service"
-                            value={user.cloud_service}
-                        />
-                        <TextField
-                            id="name_ko"
-                            label="Name(KR)"
-                            value={user.name_ko}
-                        />
-                        <TextField
-                            id="name_us"
-                            label="Name(EN)"
-                            value={user.name_us}
-                        />
-                    </div>
-                    <div>
-                        <TextField
-                            id="email"
-                            label="Email"
-                            value={user.email}
-                        />
-                        <TextField
-                            id="status"
-                            label="Status"
-                            value={user.status}
-                        />
-                        <TextField
-                            id="email"
-                            label="Email"
-                            value={user.email}
-                        />
-                    </div>
-                    <div>
-                        <TextField
-                            id="institution"
-                            label="Institution"
-                            value={user.institution}
-                        />
-                        <TextField
-                            id="major"
-                            label="Major"
-                            value={user.major}
-                        />
-                        <TextField
-                            id="position"
-                            label="Position"
-                            value={user.position}
-                        />
-                        <TextField
-                            id="adviser"
-                            label="Adviser"
-                            value={user.adviser}
-                        />
-                    </div>
-                    <div>
-                        <TextField
-                            id="application_date"
-                            label="Application Date"
-                            value={user.application_date}
-                        />
-                        <TextField
-                            id="create_date"
-                            label="Create Date"
-                            value={user.create_date}
-                        />
-                    </div>
-                    <div>
-                        <TextField
-                            id="perpose"
-                            label="Perpose"
-                            multiline
-                            rows={3}
-                            value={user.perpose}
-                        />
-                        <TextField
-                            id="application_route"
-                            label="Application Route"
-                            multiline
-                            rows={3}
-                            value={user.application_route}
-                        />
-                    </div>
-                    <div>
-                        <TextField
-                            id="etc"
-                            label="etc"
-                            multiline
-                            rows={3}
-                            value={user.etc}
-                        />
-                        <TextField
-                            id="history"
-                            label="History"
-                            multiline
-                            rows={3}
-                            value={user.history}
-                        />
-                    </div>
-                </Box>
+                    <MenuItem value={"IBMQ"}>IBMQ</MenuItem>
+                    <MenuItem value={"IONQ"}>IonQ</MenuItem>
+                    <MenuItem value={"DWAVE"}>D-wave</MenuItem>
+                </Select>
+                <input type="file" accept={".xlsx"} ref={fileInput} onChange={handleInputChange} style={{ display: "none" }} />
+                <Button onClick={(e) => { handleOnSubmit(e); }} variant="outlined" disabled={disable}>Upload xlsx</Button>
+            </Stack>
+            <Stack spacing={2} direction="row" justifyContent="end" sx={{m:1}} >
+                <Button variant="outlined" onClick={handleSaveNewUser} disabled={disable}>Save New User</Button>
+                <Button variant="outlined" onClick={refreshPage}>Reset</Button>
+            </Stack>
+            <Box
+                component="form"
+                sx={{
+                    '& .MuiTextField-root': { m: 1 },
+                }}
+                noValidate
+                autoComplete="off"
+            >
+                <div>
+                    <TextField
+                        id="cloud_service"
+                        label="Cloud Service"
+                        onChange={(v) => setCloudService(v.target.value)}
+                        defaultValue={""}
+                    />
+                    <TextField
+                        id="name_ko"
+                        label="Name(KR)"
+                        onChange={(v) => setNameKo(v.target.value)}
+                        defaultValue={""}
+                    />
+                    <TextField
+                        id="name_us"
+                        label="Name(EN)"
+                        onChange={(v) => setNameUs(v.target.value)}
+                        defaultValue={""}
+                    />
+                </div>
+                <div>
+                    <TextField
+                        id="email"
+                        label="Email"
+                        onChange={(v) => setEmail(v.target.value)}
+                        defaultValue={""}
+                    />
+                    <TextField
+                        id="status"
+                        label="Status"
+                        onChange={(v) => setStatus(v.target.value)}
+                        defaultValue={""}
+                    />
+                    <TextField
+                        id="Phone"
+                        label="phone"
+                        onChange={(v) => setPhone(v.target.value)}
+                        defaultValue={""}
+                    />
+                </div>
+                <div>
+                    <TextField
+                        id="institution"
+                        label="Institution"
+                        onChange={(v) => setInstitution(v.target.value)}
+                        defaultValue={""}
+                    />
+                    <TextField
+                        id="major"
+                        label="Major"
+                        onChange={(v) => setMajor(v.target.value)}
+                        defaultValue={""}
+                    />
+                    <TextField
+                        id="position"
+                        label="Position"
+                        onChange={(v) => setPosition(v.target.value)}
+                        defaultValue={""}
+                    />
+                    <TextField
+                        id="adviser"
+                        label="Adviser"
+                        onChange={(v) => setAdviser(v.target.value)}
+                        defaultValue={""}
+                    />
+                </div>
+                <div>
+                    <TextField
+                        id="usage"
+                        label="Usage"
+                        onChange={(v) => setUsage(v.target.value)}
+                        defaultValue={""}
+                    />
+                    <TextField
+                        id="quota"
+                        label="Quota"
+                        onChange={(v) => setQuota(v.target.value)}
+                        defaultValue={""}
+                    />
+                    <TextField
+                        id="application_date"
+                        label="Application Date"
+                        onChange={(v) => setApplicationDate(v.target.value)}
+                        defaultValue={""}
+                    />
+                    <TextField
+                        id="create_date"
+                        label="Create Date"
+                        onChange={(v) => setCreateDate(v.target.value)}
+                        defaultValue={""}
+                    />
+                </div>
+                <div>
+                    <TextField
+                        id="perpose"
+                        label="Perpose"
+                        onChange={(v) => setPerpose(v.target.value)}
+                        multiline
+                        rows={3}
+                        defaultValue={""}
+                    />
+                    <TextField
+                        id="application_route"
+                        label="Application Route"
+                        onChange={(v) => setApplicationRoute(v.target.value)}
+                        multiline
+                        rows={3}
+                        defaultValue={""}
+                    />
+                </div>
+                <div>
+                    <TextField
+                        id="etc"
+                        label="etc"
+                        onChange={(v) => setEtc(v.target.value)}
+                        multiline
+                        rows={3}
+                        defaultValue={""}
+                    />
+                    <TextField
+                        id="history"
+                        label="History"
+                        onChange={(v) => setHistory(v.target.value)}
+                        multiline
+                        rows={3}
+                        defaultValue={""}
+                    />
+                </div>
+                <div>
+                    <TextField
+                        id="privateInfo"
+                        label="Private Info"
+                        onChange={(v) => setPrivateInfo(v.target.value)}
+                        defaultValue={""}
+                    />
+                </div>
+            </Box>
 
 
-            </div>
-        );
-    } else {
-        return (
-            <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
-                {/* User # {user._id} */}
-                <Stack spacing={2} direction="row" justifyContent="end">
-                    <input type="file" accept={".xlsx"} ref={fileInput} onChange={handleInputChange} style={{ display: "none" }} />
-                    <Button onClick={(e) => { handleOnSubmit(e); }} variant="outlined">Upload xlsx</Button>
-                    <Button variant="outlined">Save</Button>
-                    <Button variant="outlined">Reset</Button>
-                </Stack>
-                <Box
-                    component="form"
-                    sx={{
-                        '& .MuiTextField-root': { m: 1 },
-                    }}
-                    noValidate
-                    autoComplete="off"
-                >
-                    <div>
-                        <TextField
-                            id="cloud_service"
-                            label="Cloud Service"
-                            value={""}
-                        />
-                        <TextField
-                            id="name_ko"
-                            label="Name(KR)"
-                            value={""}
-                        />
-                        <TextField
-                            id="name_us"
-                            label="Name(EN)"
-                            value={""}
-                        />
-                    </div>
-                    <div>
-                        <TextField
-                            id="email"
-                            label="Email"
-                            value={""}
-                        />
-                        <TextField
-                            id="status"
-                            label="Status"
-                            value={""}
-                        />
-                        <TextField
-                            id="email"
-                            label="Email"
-                            value={""}
-                        />
-                    </div>
-                    <div>
-                        <TextField
-                            id="institution"
-                            label="Institution"
-                            value={""}
-                        />
-                        <TextField
-                            id="major"
-                            label="Major"
-                            value={""}
-                        />
-                        <TextField
-                            id="position"
-                            label="Position"
-                            value={""}
-                        />
-                        <TextField
-                            id="adviser"
-                            label="Adviser"
-                            value={""}
-                        />
-                    </div>
-                    <div>
-                        <TextField
-                            id="application_date"
-                            label="Application Date"
-                            value={""}
-                        />
-                        <TextField
-                            id="create_date"
-                            label="Create Date"
-                            value={""}
-                        />
-                    </div>
-                    <div>
-                        <TextField
-                            id="perpose"
-                            label="Perpose"
-                            multiline
-                            rows={3}
-                            value={""}
-                        />
-                        <TextField
-                            id="application_route"
-                            label="Application Route"
-                            multiline
-                            rows={3}
-                            value={""}
-                        />
-                    </div>
-                    <div>
-                        <TextField
-                            id="etc"
-                            label="etc"
-                            multiline
-                            rows={3}
-                            value={""}
-                        />
-                        <TextField
-                            id="history"
-                            label="History"
-                            multiline
-                            rows={3}
-                            value={""}
-                        />
-                    </div>
-                </Box>
-
-
-            </div>
-        );
-    }
+        </div>
+    );
 }
 
 export default CloudUserInputs;
