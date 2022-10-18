@@ -24,6 +24,9 @@ public class UserDto {
     private String application_route;
     private String perpose;
     private String adviser;
+    private String usage;
+    private String quota;
+    private String usage_unit;
     private UserStatus status;
     private String etc;
     private String history;
