@@ -81,7 +81,7 @@ function CloudUserInputs(props) {
 
     const handleSaveNewUser = (e) => {
         setDisable(true);
-        console.log("e", e);
+        // console.log("e", e);
         const data = [{}];
         data[0].cloud_service = cloudService;
         data[0].name_ko = nameKo;

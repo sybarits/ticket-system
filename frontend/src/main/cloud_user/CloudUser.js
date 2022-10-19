@@ -12,6 +12,7 @@ import CloudUserInputs from "./CloudUserInputs";
 function CloudUser(props) {
 
     const [disable, setDisable] = useState(false);
+    const [id, setId] = useState("");
     const [cloudService, setCloudService] = useState("IBMQ");
     const [nameKo, setNameKo] = useState("");
     const [nameUs, setNameUs] = useState("");
@@ -49,8 +50,7 @@ function CloudUser(props) {
 
     const setUserData = (data) => {
         setUser(data);
-        console.log("data",data);
-        console.log("user",user);
+        setId(data[0]._id);
         setCloudService(data[0].cloud_service);
         setNameKo(data[0].name_ko);
         setNameUs(data[0].name_us);
@@ -79,9 +79,9 @@ function CloudUser(props) {
             .then(({ data }) => setUserData(data));
     }, []);
 
-    const uploadData = (data) => {
+    const updateData = (data) => {
         axios
-            .put(Config.getServiceUrl() + "/user", { "userList": data })
+            .patch(Config.getServiceUrl() + "/user", { "userList": data })
             .then(({ data }) => {
                 resultData(data);
                 setDisable(false);
@@ -90,8 +90,8 @@ function CloudUser(props) {
 
     const handleSaveChanges = (e) => {
         setDisable(true);
-        console.log("e", e);
         const data = [{}];
+        data[0]._id = id;
         data[0].cloud_service = cloudService;
         data[0].name_ko = nameKo;
         data[0].name_us = nameUs;
@@ -112,7 +112,7 @@ function CloudUser(props) {
         data[0].history = history;
         data[0].private_info = privateInfo;
         // console.log("data",data);
-        uploadData(data);
+        updateData(data);
     }
 
     if (user.length != 0) {
@@ -120,7 +120,6 @@ function CloudUser(props) {
             <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
                 {/* Cloud User # {user[0]._id} */}
                 <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }}>
-
                     <Button variant="outlined" onClick={handleSaveChanges} disabled={disable}>Save Changes</Button>
                     <Button variant="outlined" onClick={refreshPage}>Reset</Button>
                 </Stack>
