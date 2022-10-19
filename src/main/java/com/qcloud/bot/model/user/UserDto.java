@@ -28,6 +28,7 @@ public class UserDto {
     private String quota;
     private String usage_unit;
     private UserStatus status;
+    private String group;
     private String etc;
     private String history;
 
