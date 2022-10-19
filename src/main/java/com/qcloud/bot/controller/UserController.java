@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.qcloud.bot.model.RequestDto;
@@ -48,8 +49,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.DELETE)
-    public List<UserDto> usersDelete(@RequestBody RequestDto request) {
-        return qCloudUser.deleteUsers(request);
+    public List<UserDto> usersDelete(@RequestParam(value = "deleteIdList") List<String> deleteIdList) {
+        return qCloudUser.deleteUsers(deleteIdList);
     }
 
 

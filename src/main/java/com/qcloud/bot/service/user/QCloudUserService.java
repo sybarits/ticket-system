@@ -77,10 +77,10 @@ public class QCloudUserService implements UserService {
     }
 
     @Override
-    public List<UserDto> deleteUsers(RequestDto request) {
+    public List<UserDto> deleteUsers(List<String> deleteIdList) {
         List<String> ids = new ArrayList<>();
-        for (UserDto user : request.getUserList()) {
-            ids.add(user.get_id());
+        for (String id : deleteIdList) {
+            ids.add(id);
         }
 
         Query query = new Query(Criteria.where("_id").in(ids));

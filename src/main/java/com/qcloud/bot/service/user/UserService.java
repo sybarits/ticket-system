@@ -11,6 +11,6 @@ public interface UserService {
     public List<UserDto> putUsers(RequestDto request);
     public List<UserDto> putUser(RequestDto request);
     public List<UserDto> updateUsers(RequestDto request);
-    public List<UserDto> deleteUsers(RequestDto request);
+    public List<UserDto> deleteUsers(List<String> deleteIdList);
     public List<UserDto> getUser(String id);
 }
