@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import { Box, TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 
 import Config from '../config.js';
 import CloudUserInputs from "./CloudUserInputs";
@@ -90,7 +87,7 @@ function CloudUser(props) {
 
     const deleteData = (data) => {
         axios
-            .delete(Config.getServiceUrl() + "/user?deleteIdList=" + data )
+            .delete(Config.getServiceUrl() + "/user?deleteIdList=" + data)
             .then(({ data }) => {
                 resultData(data);
                 refreshPage();
@@ -136,6 +133,10 @@ function CloudUser(props) {
         updateData(list);
     }
 
+    const handleCloudSelectChange = (e) => {
+        setCloudService(e.target.value);
+    }
+
     if (user.length != 0) {
         return (
             <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
@@ -154,12 +155,20 @@ function CloudUser(props) {
                     autoComplete="off"
                 >
                     <div>
-                        <TextField
-                            id="cloud_service"
-                            label="Cloud Service"
-                            onChange={(v) => setCloudService(v.target.value)}
-                            defaultValue={cloudService}
-                        />
+                        <FormControl sx={{ m: 1, minWidth: 200 }}>
+                            <InputLabel id="cloud-servie-select-label">Cloud Service</InputLabel>
+                            <Select
+                                labelId="cloud-servie-select-label"
+                                id="cloud-servie-select"
+                                value={cloudService}
+                                label="Cloud Service"
+                                onChange={handleCloudSelectChange}
+                            >
+                                <MenuItem value={"IBMQ"}>IBMQ</MenuItem>
+                                <MenuItem value={"IONQ"}>IonQ</MenuItem>
+                                <MenuItem value={"DWAVE"}>D-wave</MenuItem>
+                            </Select>
+                        </FormControl>
                         <TextField
                             id="name_ko"
                             label="Name(KR)"

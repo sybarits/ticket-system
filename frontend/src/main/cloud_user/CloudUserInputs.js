@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Box, TextField, Stack, Button, Select, MenuItem } from '@mui/material';
+import { Box, TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import * as XLSX from 'xlsx';
 import Config from '../config.js';
 
@@ -29,7 +29,7 @@ function CloudUserInputs(props) {
     const [privateInfo, setPrivateInfo] = useState("");
 
     const fileInput = React.useRef(null);
-    const ionqUserDataKey = {
+    const ionqGoogleFormUserDataKey = {
         "-(학생 또는 연구원의 경우 해당 시) 지도교수:": "adviser",
         "날짜": "application_date",
         "신청 경로": "application_route",
@@ -75,7 +75,6 @@ function CloudUserInputs(props) {
     }
 
     const handleCloudSelectChange = (e) => {
-        console.log("select change e", e);
         setCloudService(e.target.value);
     }
 
@@ -115,9 +114,9 @@ function CloudUserInputs(props) {
 
         const jsonToObjectArray = (rowObj) => {
             const data = rowObj.map(r => {
-                const obj = Object.keys(ionqUserDataKey).reduce((object, header, index) => {
+                const obj = Object.keys(ionqGoogleFormUserDataKey).reduce((object, header, index) => {
                     if (r[header] != undefined) {
-                        object[ionqUserDataKey[header]] = r[header];
+                        object[ionqGoogleFormUserDataKey[header]] = r[header];
                     }
                     return object;
                 }, {});
@@ -140,10 +139,10 @@ function CloudUserInputs(props) {
 
     return (
         <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
-            <Stack spacing={2} direction="row" justifyContent="end" sx={{m:1}} >
+            <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }} >
                 <Select
                     id="cloud-servie-select"
-                    value={"IBMQ"}
+                    value={cloudService}
                     label="Cloud Service"
                     onChange={handleCloudSelectChange}
                 >
@@ -154,7 +153,7 @@ function CloudUserInputs(props) {
                 <input type="file" accept={".xlsx"} ref={fileInput} onChange={handleInputChange} style={{ display: "none" }} />
                 <Button onClick={(e) => { handleOnSubmit(e); }} variant="outlined" disabled={disable}>Upload xlsx</Button>
             </Stack>
-            <Stack spacing={2} direction="row" justifyContent="end" sx={{m:1}} >
+            <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }} >
                 <Button variant="outlined" onClick={handleSaveNewUser} disabled={disable}>Save New User</Button>
                 <Button variant="outlined" onClick={refreshPage}>Reset</Button>
             </Stack>
@@ -167,12 +166,20 @@ function CloudUserInputs(props) {
                 autoComplete="off"
             >
                 <div>
-                    <TextField
-                        id="cloud_service"
-                        label="Cloud Service"
-                        onChange={(v) => setCloudService(v.target.value)}
-                        defaultValue={""}
-                    />
+                    <FormControl sx={{ m: 1, minWidth: 200 }}>
+                        <InputLabel id="cloud-servie-select-label">Cloud Service</InputLabel>
+                        <Select
+                            labelId="cloud-servie-select-label"
+                            id="cloud-servie-select"
+                            value={cloudService}
+                            label="Cloud Service"
+                            onChange={handleCloudSelectChange}
+                        >
+                            <MenuItem value={"IBMQ"}>IBMQ</MenuItem>
+                            <MenuItem value={"IONQ"}>IonQ</MenuItem>
+                            <MenuItem value={"DWAVE"}>D-wave</MenuItem>
+                        </Select>
+                    </FormControl>
                     <TextField
                         id="name_ko"
                         label="Name(KR)"
