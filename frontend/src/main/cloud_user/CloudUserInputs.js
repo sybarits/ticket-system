@@ -27,9 +27,10 @@ function CloudUserInputs(props) {
     const [etc, setEtc] = useState("");
     const [history, setHistory] = useState("");
     const [privateInfo, setPrivateInfo] = useState("");
+    const [group, setGroup] = useState("");
 
     const fileInput = React.useRef(null);
-    const ionqGoogleFormUserDataKey = {
+    const cloudServiceApplicationGoogleFormUserDataKey = {
         "-(학생 또는 연구원의 경우 해당 시) 지도교수:": "adviser",
         "날짜": "application_date",
         "신청 경로": "application_route",
@@ -50,6 +51,29 @@ function CloudUserInputs(props) {
         "IonQ 양자컴퓨터 클라우드를 처음 접하게 된 계기": "find_out",
         "상태": "status",
         "유저아이디": "user_id",
+    }
+
+    const cloudServiceIBMQUserDataKey = {
+        "-(학생 또는 연구원의 경우 해당 시) 지도교수:": "adviser",
+        "계정생성일짜": "application_date",
+        "신청 경로": "application_route",
+        "클라우드": "cloud_service",
+        "생성날짜": "create_date",
+        "이메일": "email",
+        "비고": "etc",
+        "히스토리": "history",
+        "기관": "institution",
+        "소속": "major",
+        "구분": "group",
+        "이름(국문)": "name_ko",
+        "이름": "name_ko",
+        "이름(영문)": "name_us",
+        "휴대전화": "phone",
+        "학년/직위:": "position",
+        "개인정보 수집·이용 및 제3자 제공 동의": "private_info",
+        "IonQ 양자컴퓨터 클라우드를 처음 접하게 된 계기": "find_out",
+        "상태": "status",
+        "학번(교번)": "user_id",
     }
 
     const resultData = (data) => {
@@ -78,6 +102,10 @@ function CloudUserInputs(props) {
         setCloudService(e.target.value);
     }
 
+    const handleStatusSelectChange = (e) => {
+        setStatus(e.target.value);
+    }
+
     const handleSaveNewUser = (e) => {
         setDisable(true);
         // console.log("e", e);
@@ -101,6 +129,7 @@ function CloudUserInputs(props) {
         data[0].etc = etc;
         data[0].history = history;
         data[0].private_info = privateInfo;
+        data[0].group = group;
         // console.log("data",data);
         uploadData(data);
     }
@@ -114,14 +143,26 @@ function CloudUserInputs(props) {
 
         const jsonToObjectArray = (rowObj) => {
             const data = rowObj.map(r => {
-                const obj = Object.keys(ionqGoogleFormUserDataKey).reduce((object, header, index) => {
-                    if (r[header] != undefined) {
-                        object[ionqGoogleFormUserDataKey[header]] = r[header];
-                    }
-                    return object;
-                }, {});
-                obj["cloud_service"] = cloudService;
-                return obj;
+
+                if (cloudService === "IBMQ") {
+                    const obj = Object.keys(cloudServiceIBMQUserDataKey).reduce((object, header, index) => {
+                        if (r[header] != undefined) {
+                            object[cloudServiceIBMQUserDataKey[header]] = r[header];
+                        }
+                        return object;
+                    }, {});
+                    obj["cloud_service"] = cloudService;
+                    return obj;
+                } else {
+                    const obj = Object.keys(cloudServiceApplicationGoogleFormUserDataKey).reduce((object, header, index) => {
+                        if (r[header] != undefined) {
+                            object[cloudServiceApplicationGoogleFormUserDataKey[header]] = r[header];
+                        }
+                        return object;
+                    }, {});
+                    obj["cloud_service"] = cloudService;
+                    return obj;
+                }
             });
 
             uploadData(data);
@@ -166,6 +207,23 @@ function CloudUserInputs(props) {
                 autoComplete="off"
             >
                 <div>
+                <FormControl sx={{ m: 1, minWidth: 200 }}>
+                        <InputLabel id="status-select-label">Status</InputLabel>
+                        <Select
+                            labelId="status-select-label"
+                            id="status-select"
+                            value={status}
+                            label="Status"
+                            onChange={handleStatusSelectChange}
+                        >
+                            <MenuItem value={"APPLICATION"}>APPLICATION</MenuItem>
+                            <MenuItem value={"INVITATIONSENT"}>INVITATION SENT</MenuItem>
+                            <MenuItem value={"INVITATIONEXPIRED"}>INVITATION EXPIRED</MenuItem>
+                            <MenuItem value={"ACTIVATE"}>ACTIVATE</MenuItem>
+                            <MenuItem value={"DEACTIVATE"}>DEACTIVATE</MenuItem>
+                            <MenuItem value={"REJECT"}>REJECT</MenuItem>
+                        </Select>
+                    </FormControl>
                     <FormControl sx={{ m: 1, minWidth: 200 }}>
                         <InputLabel id="cloud-servie-select-label">Cloud Service</InputLabel>
                         <Select
@@ -194,6 +252,7 @@ function CloudUserInputs(props) {
                     />
                 </div>
                 <div>
+                    
                     <TextField
                         id="email"
                         label="Email"
@@ -201,15 +260,15 @@ function CloudUserInputs(props) {
                         defaultValue={""}
                     />
                     <TextField
-                        id="status"
-                        label="Status"
-                        onChange={(v) => setStatus(v.target.value)}
-                        defaultValue={""}
-                    />
-                    <TextField
                         id="Phone"
                         label="phone"
                         onChange={(v) => setPhone(v.target.value)}
+                        defaultValue={""}
+                    />
+                    <TextField
+                        id="group"
+                        label="Group"
+                        onChange={(v) => setGroup(v.target.value)}
                         defaultValue={""}
                     />
                 </div>

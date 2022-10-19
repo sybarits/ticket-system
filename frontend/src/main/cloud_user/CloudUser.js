@@ -29,6 +29,7 @@ function CloudUser(props) {
     const [etc, setEtc] = useState("");
     const [history, setHistory] = useState("");
     const [privateInfo, setPrivateInfo] = useState("");
+    const [group, setGroup] = useState("");
 
     const params = useParams();
     if (props.userId != undefined) {
@@ -67,7 +68,7 @@ function CloudUser(props) {
         setEtc(data[0].etc);
         setHistory(data[0].history);
         setPrivateInfo(data[0].private_info);
-
+        setGroup(data[0].group);
     };
 
     useEffect(() => {
@@ -122,6 +123,7 @@ function CloudUser(props) {
         data.etc = etc;
         data.history = history;
         data.private_info = privateInfo;
+        data.group = group;
         return data;
     }
 
@@ -136,6 +138,11 @@ function CloudUser(props) {
     const handleCloudSelectChange = (e) => {
         setCloudService(e.target.value);
     }
+
+    const handleStatusSelectChange = (e) => {
+        setStatus(e.target.value);
+    }
+
 
     if (user.length != 0) {
         return (
@@ -155,6 +162,23 @@ function CloudUser(props) {
                     autoComplete="off"
                 >
                     <div>
+                    <FormControl sx={{ m: 1, minWidth: 200 }}>
+                            <InputLabel id="status-select-label">Status</InputLabel>
+                            <Select
+                                labelId="status-select-label"
+                                id="status-select"
+                                value={status}
+                                label="Status"
+                                onChange={handleStatusSelectChange}
+                            >
+                                <MenuItem value={"APPLICATION"}>APPLICATION</MenuItem>
+                                <MenuItem value={"INVITATIONSENT"}>INVITATION SENT</MenuItem>
+                                <MenuItem value={"INVITATIONEXPIRED"}>INVITATION EXPIRED</MenuItem>
+                                <MenuItem value={"ACTIVATE"}>ACTIVATE</MenuItem>
+                                <MenuItem value={"DEACTIVATE"}>DEACTIVATE</MenuItem>
+                                <MenuItem value={"REJECT"}>REJECT</MenuItem>
+                            </Select>
+                        </FormControl>
                         <FormControl sx={{ m: 1, minWidth: 200 }}>
                             <InputLabel id="cloud-servie-select-label">Cloud Service</InputLabel>
                             <Select
@@ -189,17 +213,20 @@ function CloudUser(props) {
                             onChange={(v) => setEmail(v.target.value)}
                             defaultValue={email}
                         />
-                        <TextField
-                            id="status"
-                            label="Status"
-                            onChange={(v) => setStatus(v.target.value)}
-                            defaultValue={status}
-                        />
+                        
                         <TextField
                             id="Phone"
                             label="phone"
                             onChange={(v) => setPhone(v.target.value)}
                             defaultValue={phone}
+                        />
+                        
+
+                        <TextField
+                            id="group"
+                            label="Group"
+                            onChange={(v) => setGroup(v.target.value)}
+                            defaultValue={group}
                         />
                     </div>
                     <div>
