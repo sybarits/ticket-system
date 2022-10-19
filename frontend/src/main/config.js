@@ -1,5 +1,5 @@
 var Config = (function () {
-    const service_url = "http://192.168.137.86:8080/";
+    const service_url = "http://192.168.137.86:8080";
 
     return {
         getServiceUrl() {
