@@ -88,31 +88,52 @@ function CloudUser(props) {
             });
     };
 
+    const deleteData = (data) => {
+        axios
+            .delete(Config.getServiceUrl() + "/user?deleteIdList=" + data )
+            .then(({ data }) => {
+                resultData(data);
+                refreshPage();
+                // setDisable(false);
+            });
+    };
+
+    const handleDelete = (e) => {
+        setDisable(true);
+        deleteData(id)
+    }
+
+    const makeUser = () => {
+        const data = {};
+        data._id = id;
+        data.cloud_service = cloudService;
+        data.name_ko = nameKo;
+        data.name_us = nameUs;
+        data.email = email;
+        data.status = status;
+        data.phone = phone;
+        data.institution = institution;
+        data.major = major;
+        data.position = position;
+        data.adviser = adviser;
+        data.usage = usage;
+        data.quota = quota;
+        data.application_date = applicationDate;
+        data.create_date = createDate;
+        data.perpose = perpose;
+        data.application_route = applicationRoute;
+        data.etc = etc;
+        data.history = history;
+        data.private_info = privateInfo;
+        return data;
+    }
+
     const handleSaveChanges = (e) => {
         setDisable(true);
-        const data = [{}];
-        data[0]._id = id;
-        data[0].cloud_service = cloudService;
-        data[0].name_ko = nameKo;
-        data[0].name_us = nameUs;
-        data[0].email = email;
-        data[0].status = status;
-        data[0].phone = phone;
-        data[0].institution = institution;
-        data[0].major = major;
-        data[0].position = position;
-        data[0].adviser = adviser;
-        data[0].usage = usage;
-        data[0].quota = quota;
-        data[0].application_date = applicationDate;
-        data[0].create_date = createDate;
-        data[0].perpose = perpose;
-        data[0].application_route = applicationRoute;
-        data[0].etc = etc;
-        data[0].history = history;
-        data[0].private_info = privateInfo;
-        // console.log("data",data);
-        updateData(data);
+        const user = makeUser();
+        const list = [];
+        list.push(user);
+        updateData(list);
     }
 
     if (user.length != 0) {
@@ -122,6 +143,7 @@ function CloudUser(props) {
                 <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }}>
                     <Button variant="outlined" onClick={handleSaveChanges} disabled={disable}>Save Changes</Button>
                     <Button variant="outlined" onClick={refreshPage}>Reset</Button>
+                    <Button variant="outlined" color="error" onClick={handleDelete} disabled={disable}>Delete</Button>
                 </Stack>
                 <Box
                     component="form"
