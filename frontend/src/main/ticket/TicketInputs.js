@@ -55,9 +55,8 @@ function TicketInputs(props) {
                             value={ticket.create_time}
                         />
                     </div>
-                    <CloudUser userId={ticket.user._id}/>
                 </Box>
-
+                {ticket.ticket_type == "USER" && <CloudUser userId={ticket.user._id}/> }
 
             </div>
         );

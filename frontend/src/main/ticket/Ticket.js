@@ -56,7 +56,7 @@ function Ticket() {
                         />
                     </div>
                 </Box>
-                <CloudUser userId={ticket[0].user._id} />
+                {ticket.ticket_type == "USER" && <CloudUser userId={ticket[0].user._id} /> }
 
             </div>
         );
