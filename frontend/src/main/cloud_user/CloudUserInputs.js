@@ -55,7 +55,7 @@ function CloudUserInputs(props) {
 
     const cloudServiceIBMQUserDataKey = {
         "-(학생 또는 연구원의 경우 해당 시) 지도교수:": "adviser",
-        "계정생성일짜": "application_date",
+        "계정생성일자": "application_date",
         "신청 경로": "application_route",
         "클라우드": "cloud_service",
         "생성날짜": "create_date",
