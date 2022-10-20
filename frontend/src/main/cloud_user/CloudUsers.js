@@ -7,17 +7,13 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 
+import Config from '../config.js';
+import CloudUserChart from "../statistics/CloudUserChart.js";
+
 function CloudUsers() {
 
-    const btnClickedHandler = (params, e) => {
-        console.log("e", e);
-        console.log("e.clicked", e.clicked);
-        e.clicked(e.value);
-
-    }
     const BtnCellRenderer = (e) => {
         return (
-            // <button onClick={(params) => btnClickedHandler(params, e)}>Edit</button>
             <Link to={"/cloud_user/" + e.data._id}
                 key={e.data._id}
                 style={{ color: "gray", textDecoration: "none" }}
@@ -63,13 +59,18 @@ function CloudUsers() {
             params.api.setRowData(data)
         };
         axios
-            .get("http://192.168.137.86:8080/user/all")
-            .then(({ data }) => updateData(data));
+            .get(Config.getServiceUrl() + "/user/all")
+            .then(({ data }) => {
+                updateData(data);
+                // setUsers(data);
+            });
     };
 
     return (
         <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
-            <h2>Cloud Users</h2>
+            <h2>Cloud User Statistics</h2>
+            <CloudUserChart />
+            <h2>Cloud User Table</h2>
             <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }}>
                 <Button variant="outlined" href="/cloud_user_input">Add User</Button>
                 <Button variant="outlined" onClick={refreshPage}>Refresh</Button>
