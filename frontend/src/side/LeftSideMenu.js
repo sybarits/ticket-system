@@ -32,7 +32,9 @@ function LeftSideMenu() {
     ];
     return (
         <Side>
-            <Logo src={logo}></Logo>
+            <Link to={"/"} key={"logo"} >
+                <Logo src={logo}></Logo>
+            </Link>
             <Menu>
                 {menus.map((menu, index) => {
                     return (

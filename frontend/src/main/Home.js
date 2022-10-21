@@ -1,7 +1,11 @@
+import CloudUserChart from "./statistics/CloudUserChart";
+
 function Home() {
 
     return (
-        <div>wow</div>
+        <div>
+            <CloudUserChart />
+        </div>
     );
 }
 
