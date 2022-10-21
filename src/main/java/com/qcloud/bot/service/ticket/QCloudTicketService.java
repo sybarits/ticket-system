@@ -99,4 +99,14 @@ public class QCloudTicketService implements TicketService {
         return result.collectList().block();
     }
 
+    @Override
+    public List<TicketDto> getTicketByStatus(String ticketType) {
+        Flux<TicketDto> result = mongoTemplate.find(
+                Query.query(new Criteria().orOperator(
+                    Criteria.where("status").is(ticketType)
+                )),
+                TicketDto.class);
+        return result.collectList().block();
+    }
+
 }
