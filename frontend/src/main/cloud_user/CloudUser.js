@@ -309,7 +309,7 @@ function CloudUser(props) {
                         />
                         <TextField
                             id="history"
-                            label="history Route"
+                            label="History"
                             onChange={(v) => setHistory(v.target.value)}
                             multiline
                             rows={3}

@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, forwardRef, useImperativeHandle } from "react";
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Box, TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import * as XLSX from 'xlsx';
 import Config from '../config.js';
 
-function CloudUserInputs(props) {
+const CloudUserInputs = forwardRef((props, ref) => {
+    const context = props.context;
 
     const [disable, setDisable] = useState(false);
     const [cloudService, setCloudService] = useState("IBMQ");
@@ -76,6 +77,34 @@ function CloudUserInputs(props) {
         "학번(교번)": "user_id",
     }
 
+    useImperativeHandle(ref, () => ({
+        getUserData(e) {
+            const data = {};
+            data.cloud_service = cloudService;
+            data.name_ko = nameKo;
+            data.name_us = nameUs;
+            data.email = email;
+            data.status = status;
+            data.phone = phone;
+            data.institution = institution;
+            data.major = major;
+            data.position = position;
+            data.adviser = adviser;
+            data.usage = usage;
+            data.quota = quota;
+            data.application_date = applicationDate;//this will be ISO format - new Date() -> toISOString()
+            data.create_date = createDate;//this will be ISO format - new Date() -> toISOString()
+            data.perpose = perpose;
+            data.application_route = applicationRoute;
+            data.etc = etc;
+            data.history = history;
+            data.private_info = privateInfo;
+            data.group = group;
+            // console.log("data",data);
+            return data;
+        }
+    }))
+
     const resultData = (data) => {
         console.log("complete upload data", data);
     };
@@ -122,8 +151,8 @@ function CloudUserInputs(props) {
         data[0].adviser = adviser;
         data[0].usage = usage;
         data[0].quota = quota;
-        data[0].application_date = applicationDate;
-        data[0].create_date = createDate;
+        data[0].application_date = applicationDate;//this will be ISO format - new Date() -> toISOString()
+        data[0].create_date = createDate;//this will be ISO format - new Date() -> toISOString()
         data[0].perpose = perpose;
         data[0].application_route = applicationRoute;
         data[0].etc = etc;
@@ -133,6 +162,8 @@ function CloudUserInputs(props) {
         // console.log("data",data);
         uploadData(data);
     }
+
+    
 
     const handleInputChange = (e) => {
         // console.log(e.target);
@@ -180,24 +211,28 @@ function CloudUserInputs(props) {
 
     return (
         <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
-            <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }} >
-                <Select
-                    id="cloud-servie-select"
-                    value={cloudService}
-                    label="Cloud Service"
-                    onChange={handleCloudSelectChange}
-                >
-                    <MenuItem value={"IBMQ"}>IBMQ</MenuItem>
-                    <MenuItem value={"IONQ"}>IonQ</MenuItem>
-                    <MenuItem value={"DWAVE"}>D-wave</MenuItem>
-                </Select>
-                <input type="file" accept={".xlsx"} ref={fileInput} onChange={handleInputChange} style={{ display: "none" }} />
-                <Button onClick={(e) => { handleOnSubmit(e); }} variant="outlined" disabled={disable}>Upload xlsx</Button>
-            </Stack>
-            <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }} >
-                <Button variant="outlined" onClick={handleSaveNewUser} disabled={disable}>Save New User</Button>
-                <Button variant="outlined" onClick={refreshPage}>Reset</Button>
-            </Stack>
+            {context != Config.Context().TicketInputs() &&
+                <div>
+                    <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }} >
+                        <Select
+                            id="cloud-servie-select"
+                            value={cloudService}
+                            label="Cloud Service"
+                            onChange={handleCloudSelectChange}
+                        >
+                            <MenuItem value={"IBMQ"}>IBMQ</MenuItem>
+                            <MenuItem value={"IONQ"}>IonQ</MenuItem>
+                            <MenuItem value={"DWAVE"}>D-wave</MenuItem>
+                        </Select>
+                        <input type="file" accept={".xlsx"} ref={fileInput} onChange={handleInputChange} style={{ display: "none" }} />
+                        <Button onClick={(e) => { handleOnSubmit(e); }} variant="outlined" disabled={disable}>Upload xlsx</Button>
+                    </Stack>
+                    <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }} >
+                        <Button variant="outlined" onClick={handleSaveNewUser} disabled={disable}>Save New User</Button>
+                        <Button variant="outlined" onClick={refreshPage}>Reset</Button>
+                    </Stack>
+                </div>
+            }
             <Box
                 component="form"
                 sx={{
@@ -207,7 +242,7 @@ function CloudUserInputs(props) {
                 autoComplete="off"
             >
                 <div>
-                <FormControl sx={{ m: 1, minWidth: 200 }}>
+                    <FormControl sx={{ m: 1, minWidth: 200 }}>
                         <InputLabel id="status-select-label">Status</InputLabel>
                         <Select
                             labelId="status-select-label"
@@ -252,7 +287,7 @@ function CloudUserInputs(props) {
                     />
                 </div>
                 <div>
-                    
+
                     <TextField
                         id="email"
                         label="Email"
@@ -373,6 +408,6 @@ function CloudUserInputs(props) {
 
         </div>
     );
-}
+});
 
 export default CloudUserInputs;

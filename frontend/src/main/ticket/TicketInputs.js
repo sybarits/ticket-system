@@ -1,19 +1,75 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import CloudUser from '../cloud_user/CloudUser.js';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import { Box, TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 
 import Config from '../config.js';
+import CloudUserInputs from "../cloud_user/CloudUserInputs.js";
 
 function TicketInputs(props) {
+
+    const [disable, setDisable] = useState(false);
+    const [id, setId] = useState("");
+    const [ticketType, setTicketType] = useState("");
+    const [createDate, setCreateDate] = useState("");
+    const [lastmodifyDate, setLastModifyDate] = useState("");
+    const [status, setStatus] = useState("");
+    const [saveObject, setSaveObject] = useState("");
+    const [desc, setDesc] = useState("");
+    const [history, setHistory] = useState("");
+
+    const [userId, setUserId] = useState("");
+    const [user, setUser] = useState("");
+
+    const cloudUserInputsRef = useRef();
 
     const params = useParams();
     if (props.ticket != undefined) {
         params.ticket = props.ticket;
+    }
+
+    // const refreshPage = (e) => {
+    //     window.location.reload(false);
+    // }
+
+    const resultData = (data) => {
+        console.log("complete upload data", data);
+    };
+
+    const handleTicketTypeChange = (e) => {
+        setTicketType(e.target.value);
+    }
+
+    const handleStatusSelectChange = (e) => {
+        setStatus(e.target.value);
+    }
+
+    const uploadData = (data) => {
+        axios
+            .put(Config.getServiceUrl() + "/ticket", { "ticketList": data })
+            .then(({ data }) => {
+                resultData(data);
+                setDisable(false);
+            });
+    };
+
+    const handleSaveNewTicket = (e) => {
+        setDisable(true);
+        
+        // console.log("e", e);
+        const data = [{}];
+        data[0].ticket_type = ticketType;
+        data[0].create_date = createDate;
+        data[0].last_modify_date = lastmodifyDate;
+        data[0].status = status;
+        data[0].save_object = saveObject;
+        data[0].desc = desc;
+        data[0].history = history;
+        data[0].user_id = userId;
+        data[0].user = cloudUserInputsRef.current.getUserData();
+        console.log("data",data);
+        uploadData(data);
     }
 
     // const [ticket, setTicket] = useState([]);
@@ -24,83 +80,93 @@ function TicketInputs(props) {
     //       .then(({data}) => setTicket(data));
     // }, []);
     
-    if (props.ticket[0] != undefined && props.ticket[0] != null) {
-        const ticket = props.ticket[0];
-        console.log(ticket);
-        return (
-            <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
+    return (
+        <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
+            <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }} >
+                <Button variant="outlined" onClick={handleSaveNewTicket} disabled={disable}>Save New Ticket</Button>
+                <Button variant="outlined" onClick={Config.refreshPage}>Reset</Button>
+            </Stack>
+            <Box
+                component="form"
+                sx={{
+                    '& .MuiTextField-root': { m: 1 },
+                }}
+                noValidate
+                autoComplete="off"
+            >
+                <div>
+                <FormControl sx={{ m: 1, minWidth: 200 }}>
+                        <InputLabel id="status-select-label">Status</InputLabel>
+                        <Select
+                            labelId="status-select-label"
+                            id="status-select"
+                            value={status}
+                            label="Status"
+                            onChange={handleStatusSelectChange}
+                        >
+                            <MenuItem value={"OPEN"}>OPEN</MenuItem>
+                            <MenuItem value={"PAUSE"}>PAUSE</MenuItem>
+                            <MenuItem value={"PROCESS"}>PROCESS</MenuItem>
+                            <MenuItem value={"RETURN"}>RETURN</MenuItem>
+                            <MenuItem value={"CLOSE"}>CLOSE</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <FormControl sx={{ m: 1, minWidth: 200 }}>
+                        <InputLabel id="ticket-type-select-label">Ticket Type</InputLabel>
+                        <Select
+                            labelId="ticket-type-select-label"
+                            id="ticket-type-select"
+                            value={ticketType}
+                            label="Ticket Type"
+                            onChange={handleTicketTypeChange}
+                        >
+                            <MenuItem value={"USER"}>USER</MenuItem>
+                            <MenuItem value={"FORM"}>FORM</MenuItem>
+                            <MenuItem value={"LECTURE"}>LECTURE</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <TextField
+                        id="create_date"
+                        label="Create Date"
+                        onChange={(v) => setCreateDate(v.target.value)}
+                        defaultValue={""}
+                    />
+                    <TextField
+                        id="last_modify_date"
+                        label="Last Modify Date"
+                        onChange={(v) => setLastModifyDate(v.target.value)}
+                        defaultValue={""}
+                    />
+                </div>
+                <div>
+                    
+                    <TextField
+                        id="save_objejct"
+                        label="Save Objejct"
+                        onChange={(v) => setSaveObject(v.target.value)}
+                        defaultValue={""}
+                    />
+                    <TextField
+                        id="desc"
+                        label="Desc"
+                        onChange={(v) => setDesc(v.target.value)}
+                        defaultValue={""}
+                    />
+                    <TextField
+                        id="history"
+                        label="History"
+                        onChange={(v) => setHistory(v.target.value)}
+                        defaultValue={""}
+                    />
+                </div>
+                {ticketType == "USER" && <CloudUserInputs context={Config.Context().TicketInputs()} ref={cloudUserInputsRef} /> }
+               
                 
-                <Box
-                    component="form"
-                    sx={{
-                        '& .MuiTextField-root': { m: 1 },
-                    }}
-                    noValidate
-                    autoComplete="off"
-                >
-                    <div>
-                        <TextField
-                            id="ticket_type"
-                            label="Ticket Type"
-                            value={ticket.ticket_type}
-                        />
-                        <TextField
-                            id="status"
-                            label="Status"
-                            value={ticket.status}
-                        />
-                        <TextField
-                            id="create_time"
-                            label="Name(EN)"
-                            value={ticket.create_time}
-                        />
-                    </div>
-                </Box>
-                {ticket.ticket_type == "USER" && <CloudUser userId={ticket.user._id}/> }
-
-            </div>
-        );
-    } else {
-        return (
-            <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
-                {/* User # {ticket[0]._id} */}
-                <Stack spacing={2} direction="row" justifyContent="end">
-                    <Button variant="outlined">Add User</Button>
-                    <Button variant="outlined">Reset</Button>
-                </Stack>
-                No Ticket # {props.id}
-                <Box
-                    component="form"
-                    sx={{
-                        '& .MuiTextField-root': { m: 1 },
-                    }}
-                    noValidate
-                    autoComplete="off"
-                >
-                    <div>
-                        <TextField
-                            id="ticket_type"
-                            label="Ticket Type"
-                            value={""}
-                        />
-                        <TextField
-                            id="status"
-                            label="Status"
-                            value={""}
-                        />
-                        <TextField
-                            id="create_time"
-                            label="Name(EN)"
-                            value={""}
-                        />
-                    </div>
-                    <CloudUser userId={""}/>
-                </Box>
+            </Box>
 
 
-            </div>
-        );
-    }
+        </div>
+    );
 }
 
 export default TicketInputs;

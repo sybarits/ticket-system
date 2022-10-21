@@ -7,6 +7,8 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 
+import Config from '../config.js';
+
 
 function Tickets() {
     const btnClickedHandler = (params, e) => {
@@ -41,6 +43,11 @@ function Tickets() {
             },
         },
     ]
+
+    const refreshPage = (e) => {
+        window.location.reload(false);
+    } 
+
     const [tickets, setTickets] = useState([]);
     useEffect(() => {
         // axios
@@ -51,17 +58,17 @@ function Tickets() {
     const onGridReady = (params) => {
         const updateData = (data) => params.api.setRowData(data);
         axios
-            .get("http://192.168.137.86:8080/ticket/all")
+            .get(Config.getServiceUrl() + "/ticket/all")
             .then(({ data }) => updateData(data));
     };
 
     return (
         <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
             <h2>Tickets</h2>
-            <Stack spacing={2} direction="row" justifyContent="end">
-                <Button variant="outlined">Upload csv</Button>
-                <Button variant="outlined">Add Ticket</Button>
-                <Button variant="outlined">Refresh</Button>
+            <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }}>
+                {/* <Button variant="outlined">Upload csv</Button> */}
+                <Button variant="outlined" href="/ticket_input">Add Ticket</Button>
+                <Button variant="outlined" onClick={refreshPage}>Refresh</Button>
             </Stack>
             <div className="ag-theme-alpine" style={{ width: '100%', height: 500, margin: '0 0 0 0' }}>
                 <AgGridReact
