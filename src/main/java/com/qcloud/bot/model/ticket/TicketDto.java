@@ -13,12 +13,14 @@ public class TicketDto {
 
     @Id
     private String _id;
-    private String user_id;
     private TicketType ticket_type;
     private String create_time;
-    private String status;
+    private TicketStatus status;
+    private boolean save_objejct;
     private String desc;
     private String history;
+    
+    private String user_id;
     private UserDto user;
 
 }
