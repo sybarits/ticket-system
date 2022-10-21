@@ -14,7 +14,8 @@ public class TicketDto {
     @Id
     private String _id;
     private TicketType ticket_type;
-    private String create_time;
+    private String create_date;
+    private String last_modify_date;
     private TicketStatus status;
     private boolean save_objejct;
     private String desc;

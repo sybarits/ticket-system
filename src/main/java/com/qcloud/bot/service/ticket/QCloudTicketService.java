@@ -54,21 +54,8 @@ public class QCloudTicketService implements TicketService {
     @Override
     public List<TicketDto> putTickets(RequestDto request) {
         List<TicketDto> ticketList = request.getTicketList();
-        List<TicketDto> result = new ArrayList<TicketDto>();
-        for (TicketDto ticket : ticketList) {
-            ticket.setCreate_time(sdf.format(new Date()));
-            if (ticket.getTicket_type() == TicketType.USER) {
-                UserDto user = ticket.getUser();
-                user.setCreate_date(sdf.format(new Date()));
-                user.setStatus(UserStatus.APPLICATION);
-                Mono<UserDto> user_result = mongoTemplate.save(user);
-                ticket.setUser_id(user_result.block().get_id());
-                ticket.setUser(user_result.block());
-                Mono<TicketDto> ticket_result = mongoTemplate.save(ticket);
-                result.add(ticket_result.block());
-            }
-        }
-        return result;
+        Flux<TicketDto> result = mongoTemplate.insertAll(ticketList);
+        return result.collectList().block();
     }
 
     @Override
