@@ -1,9 +1,9 @@
 package com.qcloud.bot.model.ticket;
 
 public enum TicketStatus {
-    CREATED,
+    OPEN,
     PAUSE,
-    PROCESSING,
-    RETURNED,
-    FINISH,
+    PROCESS,
+    RETURN,
+    CLOSE,
 }
