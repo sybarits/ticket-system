@@ -17,12 +17,11 @@ import com.qcloud.bot.model.user.UserDto;
 import com.qcloud.bot.model.user.UserStatus;
 
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 @Service("QCloudUser")
 public class QCloudUserService implements UserService {
 
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     
     @Resource
     private ReactiveMongoTemplate mongoTemplate;
@@ -53,23 +52,15 @@ public class QCloudUserService implements UserService {
         List<UserDto> userList = request.getUserList();
         for (UserDto user : userList) {
             user.setCreate_date(sdf.format(new Date()));
+            if (user.getApplication_date() == null || user.getApplication_date().equals("")) {
+                user.setApplication_date(sdf.format(new Date()));
+            }
             user.setStatus(UserStatus.APPLICATION);
         }
         Flux<UserDto> result = mongoTemplate.insertAll(userList);
         return result.collectList().block();
     }
 
-    @Override
-    public List<UserDto> putUser(RequestDto request) {
-        List<UserDto> userList = request.getUserList();
-        for (UserDto user : userList) {
-            user.setCreate_date(sdf.format(new Date()));
-            user.setStatus(UserStatus.APPLICATION);
-        }
-        Flux<UserDto> result = mongoTemplate.insertAll(userList);
-        return result.collectList().block();
-    }
-    
     @Override
     public List<UserDto> updateUsers(RequestDto request) {
         Flux<UserDto> result = Flux.fromIterable(request.getUserList()).flatMap(mongoTemplate::save);

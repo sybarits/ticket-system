@@ -9,7 +9,6 @@ public interface UserService {
     public List<UserDto> getAllUsers();
     public List<UserDto> getUsers(RequestDto request);
     public List<UserDto> putUsers(RequestDto request);
-    public List<UserDto> putUser(RequestDto request);
     public List<UserDto> updateUsers(RequestDto request);
     public List<UserDto> deleteUsers(List<String> deleteIdList);
     public List<UserDto> getUser(String id);
