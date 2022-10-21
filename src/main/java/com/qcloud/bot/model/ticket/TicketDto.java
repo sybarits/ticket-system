@@ -17,7 +17,7 @@ public class TicketDto {
     private String create_date;
     private String last_modify_date;
     private TicketStatus status;
-    private boolean save_objejct;
+    private boolean save_object;
     private String desc;
     private String history;
     
