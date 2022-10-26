@@ -17,6 +17,7 @@ import com.qcloud.bot.model.ticket.TicketDto;
 import com.qcloud.bot.model.ticket.TicketType;
 import com.qcloud.bot.model.user.UserDto;
 import com.qcloud.bot.model.user.UserStatus;
+import com.qcloud.bot.util.HistoryMaker;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -60,6 +61,12 @@ public class QCloudTicketService implements TicketService {
 
     @Override
     public List<TicketDto> updateTickets(RequestDto request) {
+        for (TicketDto next : request.getTicketList()) {
+            List<TicketDto> prev = getTicket(next.get_id());
+            String history = HistoryMaker.get(prev.get(0), next);
+            next.setHistory(history);
+        }
+
         Flux<TicketDto> result = Flux.fromIterable(request.getTicketList()).flatMap(mongoTemplate::save);
         return result.collectList().block();
     }

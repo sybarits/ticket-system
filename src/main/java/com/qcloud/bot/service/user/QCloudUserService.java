@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.qcloud.bot.model.RequestDto;
 import com.qcloud.bot.model.user.UserDto;
 import com.qcloud.bot.model.user.UserStatus;
+import com.qcloud.bot.util.HistoryMaker;
 
 import reactor.core.publisher.Flux;
 
@@ -63,6 +64,12 @@ public class QCloudUserService implements UserService {
 
     @Override
     public List<UserDto> updateUsers(RequestDto request) {
+        for (UserDto next : request.getUserList()) {
+            List<UserDto> prev = getUser(next.get_id());
+            String history = HistoryMaker.get(prev.get(0), next);
+            next.setHistory(history);
+        }
+
         Flux<UserDto> result = Flux.fromIterable(request.getUserList()).flatMap(mongoTemplate::save);
         return result.collectList().block();
     }
