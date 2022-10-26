@@ -1,4 +1,4 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle  } from "react";
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Box, TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
@@ -30,8 +30,9 @@ const CloudUser = forwardRef((props, ref) => {
     const [history, setHistory] = useState("");
     const [privateInfo, setPrivateInfo] = useState("");
     const [group, setGroup] = useState("");
+    const [userId, setUserId] = useState("");
     const [user, setUser] = useState([]);
-    
+
     const params = useParams();
     if (props.userId != undefined) {
         params.userId = props.userId;
@@ -68,6 +69,7 @@ const CloudUser = forwardRef((props, ref) => {
         setHistory(data[0].history);
         setPrivateInfo(data[0].private_info);
         setGroup(data[0].group);
+        setUserId(data[0].user_id);
         setUser(data);
     };
 
@@ -139,6 +141,7 @@ const CloudUser = forwardRef((props, ref) => {
         data.history = history;
         data.private_info = privateInfo;
         data.group = group;
+        data.user_id = userId;
         return data;
     }
 
@@ -246,7 +249,6 @@ const CloudUser = forwardRef((props, ref) => {
                             defaultValue={""}
                             value={email}
                         />
-
                         <TextField
                             id="Phone"
                             label="phone"
@@ -254,14 +256,19 @@ const CloudUser = forwardRef((props, ref) => {
                             defaultValue={""}
                             value={phone}
                         />
-
-
                         <TextField
                             id="group"
                             label="Group"
                             onChange={(v) => setGroup(v.target.value)}
                             defaultValue={""}
                             value={group}
+                        />
+                        <TextField
+                            id="user_id"
+                            label="User ID"
+                            onChange={(v) => setUserId(v.target.value)}
+                            defaultValue={""}
+                            value={userId}
                         />
                     </div>
                     <div>

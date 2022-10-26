@@ -29,6 +29,7 @@ const CloudUserInputs = forwardRef((props, ref) => {
     const [history, setHistory] = useState("");
     const [privateInfo, setPrivateInfo] = useState("");
     const [group, setGroup] = useState("");
+    const [userId, setUserId] = useState("");
 
     const fileInput = React.useRef(null);
     const cloudServiceApplicationGoogleFormUserDataKey = {
@@ -100,6 +101,7 @@ const CloudUserInputs = forwardRef((props, ref) => {
             data.history = history;
             data.private_info = privateInfo;
             data.group = group;
+            data.user_id = userId;
             // console.log("data",data);
             return data;
         }
@@ -159,6 +161,7 @@ const CloudUserInputs = forwardRef((props, ref) => {
         data[0].history = history;
         data[0].private_info = privateInfo;
         data[0].group = group;
+        data[0].user_id = userId;
         // console.log("data",data);
         uploadData(data);
     }
@@ -302,6 +305,12 @@ const CloudUserInputs = forwardRef((props, ref) => {
                         id="group"
                         label="Group"
                         onChange={(v) => setGroup(v.target.value)}
+                        defaultValue={""}
+                    />
+                    <TextField
+                        id="user_id"
+                        label="User ID"
+                        onChange={(v) => setUserId(v.target.value)}
                         defaultValue={""}
                     />
                 </div>
