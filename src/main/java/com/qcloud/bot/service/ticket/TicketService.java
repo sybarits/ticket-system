@@ -10,7 +10,7 @@ public interface TicketService {
     public List<TicketDto> getTickets(RequestDto request);
     public List<TicketDto> putTickets(RequestDto request);
     public List<TicketDto> updateTickets(RequestDto request);
-    public List<TicketDto> deleteTickets(RequestDto request);
+    public List<TicketDto> deleteTickets(List<String> deleteIdList);
     public List<TicketDto> getTicket(String id);
     public List<TicketDto> getTicketByStatus(String ticketType);
 }

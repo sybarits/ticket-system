@@ -48,8 +48,8 @@ public class TicketController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.DELETE)
-    public List<TicketDto> ticketsDelete(@RequestBody RequestDto request) {
-        return qCloudTicket.deleteTickets(request);
+    public List<TicketDto> ticketsDelete(@RequestParam(value = "deleteIdList") List<String> deleteIdList) {
+        return qCloudTicket.deleteTickets(deleteIdList);
     }
 
 

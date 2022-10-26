@@ -65,10 +65,10 @@ public class QCloudTicketService implements TicketService {
     }
 
     @Override
-    public List<TicketDto> deleteTickets(RequestDto request) {
+    public List<TicketDto> deleteTickets(List<String> deletList) {
         List<String> ids = new ArrayList<>();
-        for (TicketDto ticket : request.getTicketList()) {
-            ids.add(ticket.get_id());
+        for (String id : deletList) {
+            ids.add(id);
         }
 
         Query query = new Query(Criteria.where("_id").in(ids));
