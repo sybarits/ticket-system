@@ -22,7 +22,7 @@ import reactor.core.publisher.Flux;
 @Service("QCloudTicket")
 public class QCloudTicketService implements TicketService {
 
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     
     @Resource
     private ReactiveMongoTemplate mongoTemplate;
