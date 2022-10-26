@@ -98,6 +98,10 @@ function Ticket() {
         updateData(list);
     }
 
+    const handleSaveObjectChange = (e) => {
+        setSaveObject(e.target.value);
+    }
+
     const handleTicketTypeChange = (e) => {
         setTicketType(e.target.value);
     }
@@ -185,15 +189,22 @@ function Ticket() {
                     />
                 </div>
                 <div>
-                    <TextField
-                        id="save_objejct"
-                        label="Save Objejct"
-                        onChange={(v) => setSaveObject(v.target.value)}
-                        value={saveObject}
-                    />
+                    <FormControl sx={{ m: 1, minWidth: 200 }}>
+                        <InputLabel id="save_objejct-select-label">Save Object</InputLabel>
+                        <Select
+                            labelId="save_objejct-select-label"
+                            id="save_objejct-select"
+                            value={saveObject}
+                            label="Save Object"
+                            onChange={handleSaveObjectChange}
+                        >
+                            <MenuItem value={"true"}>TRUE</MenuItem>
+                            <MenuItem value={"false"}>FALSE</MenuItem>
+                        </Select>
+                    </FormControl>
                 </div>
             </Box>
-            <hr/>
+            <hr />
             {ticketType == "USER" && <CloudUser context={Config.Context().TicketInputs()} ref={cloudUserRef} user={[user]} handleSaveChanges={handleSaveChanges} />}
         </div>
     );
