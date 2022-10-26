@@ -14,13 +14,10 @@ import org.springframework.stereotype.Service;
 
 import com.qcloud.bot.model.RequestDto;
 import com.qcloud.bot.model.ticket.TicketDto;
-import com.qcloud.bot.model.ticket.TicketType;
-import com.qcloud.bot.model.user.UserDto;
-import com.qcloud.bot.model.user.UserStatus;
+import com.qcloud.bot.model.ticket.TicketStatus;
 import com.qcloud.bot.util.HistoryMaker;
 
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 @Service("QCloudTicket")
 public class QCloudTicketService implements TicketService {
@@ -55,6 +52,10 @@ public class QCloudTicketService implements TicketService {
     @Override
     public List<TicketDto> putTickets(RequestDto request) {
         List<TicketDto> ticketList = request.getTicketList();
+        for (TicketDto ticket : ticketList) {
+            ticket.setCreate_date(sdf.format(new Date()));
+            ticket.setStatus(TicketStatus.OPEN);
+        }
         Flux<TicketDto> result = mongoTemplate.insertAll(ticketList);
         return result.collectList().block();
     }
@@ -65,6 +66,7 @@ public class QCloudTicketService implements TicketService {
             List<TicketDto> prev = getTicket(next.get_id());
             String history = HistoryMaker.get(prev.get(0), next);
             next.setHistory(history);
+            next.setLast_modify_date(sdf.format(new Date()));
         }
 
         Flux<TicketDto> result = Flux.fromIterable(request.getTicketList()).flatMap(mongoTemplate::save);
