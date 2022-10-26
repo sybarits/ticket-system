@@ -47,7 +47,7 @@ function TicketInputs(props) {
 
     const handleSaveNewTicket = (e) => {
         setDisable(true);
-        
+
         // console.log("e", e);
         const data = [{}];
         data[0].ticket_type = ticketType;
@@ -59,7 +59,6 @@ function TicketInputs(props) {
         data[0].history = history;
         data[0].user_id = userId;
         data[0].user = cloudUserInputsRef.current.getUserData();
-        console.log("data",data);
         uploadData(data);
     }
 
@@ -70,7 +69,7 @@ function TicketInputs(props) {
     //       .get(Config.getServiceUrl()+"ticket/"+params.ticketId)
     //       .then(({data}) => setTicket(data));
     // }, []);
-    
+
     return (
         <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
             <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }} >
@@ -86,7 +85,7 @@ function TicketInputs(props) {
                 autoComplete="off"
             >
                 <div>
-                <FormControl sx={{ m: 1, minWidth: 200 }}>
+                    <FormControl sx={{ m: 1, minWidth: 200 }}>
                         <InputLabel id="status-select-label">Status</InputLabel>
                         <Select
                             labelId="status-select-label"
@@ -130,29 +129,32 @@ function TicketInputs(props) {
                     />
                 </div>
                 <div>
-                    
-                    <TextField
-                        id="save_objejct"
-                        label="Save Objejct"
-                        onChange={(v) => setSaveObject(v.target.value)}
-                        defaultValue={""}
-                    />
                     <TextField
                         id="desc"
                         label="Desc"
+                        multiline
+                        rows={3}
                         onChange={(v) => setDesc(v.target.value)}
                         defaultValue={""}
                     />
                     <TextField
                         id="history"
                         label="History"
+                        multiline
+                        rows={3}
                         onChange={(v) => setHistory(v.target.value)}
                         defaultValue={""}
                     />
+                    <TextField
+                        id="save_objejct"
+                        label="Save Objejct"
+                        onChange={(v) => setSaveObject(v.target.value)}
+                        defaultValue={""}
+                    />
                 </div>
-                {ticketType == "USER" && <CloudUserInputs context={Config.Context().TicketInputs()} ref={cloudUserInputsRef} /> }
-               
-                
+                {ticketType == "USER" && <CloudUserInputs context={Config.Context().TicketInputs()} ref={cloudUserInputsRef} />}
+
+
             </Box>
         </div>
     );

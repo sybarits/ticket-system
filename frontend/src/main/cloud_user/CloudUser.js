@@ -32,7 +32,6 @@ const CloudUser = forwardRef((props, ref) => {
     const [group, setGroup] = useState("");
     const [user, setUser] = useState([]);
     
-    useState(props.user);
     const params = useParams();
     if (props.userId != undefined) {
         params.userId = props.userId;
@@ -87,6 +86,17 @@ const CloudUser = forwardRef((props, ref) => {
             .patch(Config.getServiceUrl() + "/user", { "userList": data })
             .then(({ data }) => {
                 resultData(data);
+                setUserData(data);
+                setDisable(false);
+            });
+    };
+
+    const insertData = (data) => {
+        axios
+            .put(Config.getServiceUrl() + "/user", { "userList": data })
+            .then(({ data }) => {
+                resultData(data);
+                setUserData(data);
                 setDisable(false);
             });
     };
@@ -144,6 +154,14 @@ const CloudUser = forwardRef((props, ref) => {
         const list = [];
         list.push(user);
         updateData(list);
+    }
+
+    const handleSaveUser = (e) => {
+        setDisable(true);
+        const user = makeUser();
+        const list = [];
+        list.push(user);
+        insertData(list);
     }
 
     const handleCloudSelectChange = (e) => {
@@ -209,12 +227,14 @@ const CloudUser = forwardRef((props, ref) => {
                             id="name_ko"
                             label="Name(KR)"
                             onChange={(v) => setNameKo(v.target.value)}
+                            defaultValue={""}
                             value={nameKo}
                         />
                         <TextField
                             id="name_us"
                             label="Name(EN)"
                             onChange={(v) => setNameUs(v.target.value)}
+                            defaultValue={""}
                             value={nameUs}
                         />
                     </div>
@@ -223,6 +243,7 @@ const CloudUser = forwardRef((props, ref) => {
                             id="email"
                             label="Email"
                             onChange={(v) => setEmail(v.target.value)}
+                            defaultValue={""}
                             value={email}
                         />
 
@@ -230,6 +251,7 @@ const CloudUser = forwardRef((props, ref) => {
                             id="Phone"
                             label="phone"
                             onChange={(v) => setPhone(v.target.value)}
+                            defaultValue={""}
                             value={phone}
                         />
 
@@ -238,6 +260,7 @@ const CloudUser = forwardRef((props, ref) => {
                             id="group"
                             label="Group"
                             onChange={(v) => setGroup(v.target.value)}
+                            defaultValue={""}
                             value={group}
                         />
                     </div>
@@ -246,24 +269,28 @@ const CloudUser = forwardRef((props, ref) => {
                             id="institution"
                             label="Institution"
                             onChange={(v) => setInstitution(v.target.value)}
+                            defaultValue={""}
                             value={institution}
                         />
                         <TextField
                             id="major"
                             label="Major"
                             onChange={(v) => setMajor(v.target.value)}
+                            defaultValue={""}
                             value={major}
                         />
                         <TextField
                             id="position"
                             label="Position"
                             onChange={(v) => setPosition(v.target.value)}
+                            defaultValue={""}
                             value={position}
                         />
                         <TextField
                             id="adviser"
                             label="Adviser"
                             onChange={(v) => setAdviser(v.target.value)}
+                            defaultValue={""}
                             value={adviser}
                         />
                     </div>
@@ -272,24 +299,28 @@ const CloudUser = forwardRef((props, ref) => {
                             id="usage"
                             label="Usage"
                             onChange={(v) => setUsage(v.target.value)}
+                            defaultValue={""}
                             value={usage}
                         />
                         <TextField
                             id="quota"
                             label="Quota"
                             onChange={(v) => setQuota(v.target.value)}
+                            defaultValue={""}
                             value={quota}
                         />
                         <TextField
                             id="application_date"
                             label="Application Date"
                             onChange={(v) => setApplicationDate(v.target.value)}
+                            defaultValue={""}
                             value={applicationDate}
                         />
                         <TextField
                             id="create_date"
                             label="Create Date"
                             onChange={(v) => setCreateDate(v.target.value)}
+                            defaultValue={""}
                             value={createDate}
                         />
                     </div>
@@ -300,6 +331,7 @@ const CloudUser = forwardRef((props, ref) => {
                             onChange={(v) => setPerpose(v.target.value)}
                             multiline
                             rows={3}
+                            defaultValue={""}
                             value={perpose}
                         />
                         <TextField
@@ -308,6 +340,7 @@ const CloudUser = forwardRef((props, ref) => {
                             onChange={(v) => setApplicationRoute(v.target.value)}
                             multiline
                             rows={3}
+                            defaultValue={""}
                             value={applicationRoute}
                         />
                     </div>
@@ -318,6 +351,7 @@ const CloudUser = forwardRef((props, ref) => {
                             onChange={(v) => setEtc(v.target.value)}
                             multiline
                             rows={3}
+                            defaultValue={""}
                             value={etc}
                         />
                         <TextField
@@ -326,6 +360,7 @@ const CloudUser = forwardRef((props, ref) => {
                             onChange={(v) => setHistory(v.target.value)}
                             multiline
                             rows={3}
+                            defaultValue={""}
                             value={history}
                         />
                     </div>
@@ -334,11 +369,16 @@ const CloudUser = forwardRef((props, ref) => {
                             id="privateInfo"
                             label="Private Info"
                             onChange={(v) => setPrivateInfo(v.target.value)}
+                            defaultValue={""}
                             value={privateInfo}
                         />
                     </div>
                 </Box>
-
+                {context == Config.Context().TicketInputs() &&
+                    <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }}>
+                        <Button variant="outlined" onClick={handleSaveUser} disabled={disable}>Save User</Button>
+                    </Stack>
+                }
             </div>
         );
     } else {

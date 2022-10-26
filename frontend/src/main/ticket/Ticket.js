@@ -83,7 +83,9 @@ function Ticket() {
         data.desc = desc;
         data.history = history;
         data.user_id = userId;
-        data.user = cloudUserRef.current.getUserData();
+        if (ticketType == "USER") {
+            data.user = cloudUserRef.current.getUserData();
+        }
         console.log("data", data);
         return data;
     }
@@ -164,27 +166,31 @@ function Ticket() {
                 </div>
                 <div>
                     <TextField
-                        id="save_objejct"
-                        label="Save Objejct"
-                        onChange={(v) => setSaveObject(v.target.value)}
-                        value={saveObject}
-                    />
-                    <TextField
                         id="desc"
                         label="Desc"
+                        multiline
+                        rows={3}
                         onChange={(v) => setDesc(v.target.value)}
                         value={desc}
                     />
                     <TextField
                         id="history"
                         label="History"
+                        multiline
+                        rows={3}
                         onChange={(v) => setHistory(v.target.value)}
                         value={history}
+                    />
+                    <TextField
+                        id="save_objejct"
+                        label="Save Objejct"
+                        onChange={(v) => setSaveObject(v.target.value)}
+                        value={saveObject}
                     />
                 </div>
 
             </Box>
-            {ticketType == "USER" && <CloudUser context={Config.Context().TicketInputs()} ref={cloudUserRef} user={[user]} />}
+            {ticketType == "USER" && <CloudUser context={Config.Context().TicketInputs()} ref={cloudUserRef} user={[user]} handleSaveChanges={handleSaveChanges} />}
         </div>
     );
 
