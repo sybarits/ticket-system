@@ -74,6 +74,7 @@ function Ticket() {
 
     const makeTicket = (e) => {
         const data = {};
+        data._id = id;
         data.ticket_type = ticketType;
         data.create_date = createDate;
         data.last_modify_date = lastModifyDate;

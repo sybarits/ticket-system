@@ -48,7 +48,6 @@ const CloudUser = forwardRef((props, ref) => {
 
 
     const setUserData = (data) => {
-        console.log("setUserData", data);
         setId(data[0]._id);
         setCloudService(data[0].cloud_service);
         setNameKo(data[0].name_ko);
@@ -75,7 +74,6 @@ const CloudUser = forwardRef((props, ref) => {
 
     useEffect(() => {
         if (context == Config.Context().TicketInputs()) {
-            console.log("props.user",props.user);
             setUserData(props.user);
             return;
         }
@@ -158,7 +156,6 @@ const CloudUser = forwardRef((props, ref) => {
 
 
     if (user.length != 0 || context == Config.Context().TicketInputs()) {
-        console.log("user.length != 0 || context == Config.Context().TicketInputs()");
         return (
             <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
                 {context != Config.Context().TicketInputs() &&
