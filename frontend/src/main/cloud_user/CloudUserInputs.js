@@ -365,6 +365,7 @@ const CloudUserInputs = forwardRef((props, ref) => {
                         multiline
                         rows={3}
                         defaultValue={""}
+                        sx={{ width: 460 }}
                     />
                     <TextField
                         id="application_route"
@@ -373,6 +374,7 @@ const CloudUserInputs = forwardRef((props, ref) => {
                         multiline
                         rows={3}
                         defaultValue={""}
+                        sx={{ width: 460 }}
                     />
                 </div>
                 <div>
@@ -383,6 +385,7 @@ const CloudUserInputs = forwardRef((props, ref) => {
                         multiline
                         rows={3}
                         defaultValue={""}
+                        sx={{ width: 260 }}
                     />
                     <TextField
                         id="history"
@@ -391,6 +394,7 @@ const CloudUserInputs = forwardRef((props, ref) => {
                         multiline
                         rows={3}
                         defaultValue={""}
+                        sx={{ width: 660 }}
                     />
                 </div>
                 <div>
@@ -399,6 +403,7 @@ const CloudUserInputs = forwardRef((props, ref) => {
                         label="Private Info"
                         onChange={(v) => setPrivateInfo(v.target.value)}
                         defaultValue={""}
+                        sx={{ width: 940 }}
                     />
                 </div>
             </Box>

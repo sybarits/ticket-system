@@ -333,6 +333,7 @@ const CloudUser = forwardRef((props, ref) => {
                             rows={3}
                             defaultValue={""}
                             value={perpose}
+                            sx={{ width: 460 }}
                         />
                         <TextField
                             id="application_route"
@@ -342,6 +343,7 @@ const CloudUser = forwardRef((props, ref) => {
                             rows={3}
                             defaultValue={""}
                             value={applicationRoute}
+                            sx={{ width: 460 }}
                         />
                     </div>
                     <div>
@@ -353,6 +355,7 @@ const CloudUser = forwardRef((props, ref) => {
                             rows={3}
                             defaultValue={""}
                             value={etc}
+                            sx={{ width: 260 }}
                         />
                         <TextField
                             id="history"
@@ -362,6 +365,7 @@ const CloudUser = forwardRef((props, ref) => {
                             rows={3}
                             defaultValue={""}
                             value={history}
+                            sx={{ width: 660 }}
                         />
                     </div>
                     <div>
@@ -371,6 +375,7 @@ const CloudUser = forwardRef((props, ref) => {
                             onChange={(v) => setPrivateInfo(v.target.value)}
                             defaultValue={""}
                             value={privateInfo}
+                            sx={{ width: 940 }}
                         />
                     </div>
                 </Box>

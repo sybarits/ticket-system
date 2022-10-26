@@ -172,6 +172,7 @@ function Ticket() {
                         rows={3}
                         onChange={(v) => setDesc(v.target.value)}
                         value={desc}
+                        sx={{ width: 260 }}
                     />
                     <TextField
                         id="history"
@@ -180,7 +181,10 @@ function Ticket() {
                         rows={3}
                         onChange={(v) => setHistory(v.target.value)}
                         value={history}
+                        sx={{ width: 660 }}
                     />
+                </div>
+                <div>
                     <TextField
                         id="save_objejct"
                         label="Save Objejct"
@@ -188,8 +192,8 @@ function Ticket() {
                         value={saveObject}
                     />
                 </div>
-
             </Box>
+            <hr/>
             {ticketType == "USER" && <CloudUser context={Config.Context().TicketInputs()} ref={cloudUserRef} user={[user]} handleSaveChanges={handleSaveChanges} />}
         </div>
     );
