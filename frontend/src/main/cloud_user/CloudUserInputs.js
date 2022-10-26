@@ -163,8 +163,6 @@ const CloudUserInputs = forwardRef((props, ref) => {
         uploadData(data);
     }
 
-    
-
     const handleInputChange = (e) => {
         // console.log(e.target);
         // console.log(e.target.files[0]);

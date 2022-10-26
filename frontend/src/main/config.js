@@ -12,6 +12,9 @@ var Config = (function () {
         refreshPage() {
             window.location.reload(false);
         },
+        resultData(data) {
+            console.log("complete upload data", data);
+        },
         Context() {
             const TicketInput = "TicketInputs";
             return {

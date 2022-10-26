@@ -24,15 +24,6 @@ function TicketInputs(props) {
 
     const cloudUserInputsRef = useRef();
 
-    const params = useParams();
-    if (props.ticket != undefined) {
-        params.ticket = props.ticket;
-    }
-
-    // const refreshPage = (e) => {
-    //     window.location.reload(false);
-    // }
-
     const resultData = (data) => {
         console.log("complete upload data", data);
     };
@@ -163,8 +154,6 @@ function TicketInputs(props) {
                
                 
             </Box>
-
-
         </div>
     );
 }

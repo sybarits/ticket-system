@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef, useImperativeHandle  } from "react";
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Box, TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 
 import Config from '../config.js';
 
-function CloudUser(props) {
+const CloudUser = forwardRef((props, ref) => {
+    const context = props.context;
 
     const [disable, setDisable] = useState(false);
     const [id, setId] = useState("");
@@ -29,7 +30,9 @@ function CloudUser(props) {
     const [history, setHistory] = useState("");
     const [privateInfo, setPrivateInfo] = useState("");
     const [group, setGroup] = useState("");
-
+    const [user, setUser] = useState([]);
+    
+    useState(props.user);
     const params = useParams();
     if (props.userId != undefined) {
         params.userId = props.userId;
@@ -43,10 +46,9 @@ function CloudUser(props) {
         console.log("complete upload data", data);
     };
 
-    const [user, setUser] = useState([]);
 
     const setUserData = (data) => {
-        setUser(data);
+        console.log("setUserData", data);
         setId(data[0]._id);
         setCloudService(data[0].cloud_service);
         setNameKo(data[0].name_ko);
@@ -68,9 +70,15 @@ function CloudUser(props) {
         setHistory(data[0].history);
         setPrivateInfo(data[0].private_info);
         setGroup(data[0].group);
+        setUser(data);
     };
 
     useEffect(() => {
+        if (context == Config.Context().TicketInputs()) {
+            console.log("props.user",props.user);
+            setUserData(props.user);
+            return;
+        }
         axios
             .get(Config.getServiceUrl() + "/user/" + params.userId)
             .then(({ data }) => setUserData(data));
@@ -126,6 +134,12 @@ function CloudUser(props) {
         return data;
     }
 
+    useImperativeHandle(ref, () => ({
+        getUserData(e) {
+            return makeUser();
+        }
+    }))
+
     const handleSaveChanges = (e) => {
         setDisable(true);
         const user = makeUser();
@@ -143,15 +157,17 @@ function CloudUser(props) {
     }
 
 
-    if (user.length != 0) {
+    if (user.length != 0 || context == Config.Context().TicketInputs()) {
+        console.log("user.length != 0 || context == Config.Context().TicketInputs()");
         return (
             <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
-                {/* Cloud User # {user[0]._id} */}
-                <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }}>
-                    <Button variant="outlined" onClick={handleSaveChanges} disabled={disable}>Save Changes</Button>
-                    <Button variant="outlined" onClick={refreshPage}>Reset</Button>
-                    <Button variant="outlined" color="error" onClick={handleDelete} disabled={disable}>Delete</Button>
-                </Stack>
+                {context != Config.Context().TicketInputs() &&
+                    <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }}>
+                        <Button variant="outlined" onClick={handleSaveChanges} disabled={disable}>Save Changes</Button>
+                        <Button variant="outlined" onClick={refreshPage}>Reset</Button>
+                        <Button variant="outlined" color="error" onClick={handleDelete} disabled={disable}>Delete</Button>
+                    </Stack>
+                }
                 <Box
                     component="form"
                     sx={{
@@ -161,7 +177,7 @@ function CloudUser(props) {
                     autoComplete="off"
                 >
                     <div>
-                    <FormControl sx={{ m: 1, minWidth: 200 }}>
+                        <FormControl sx={{ m: 1, minWidth: 200 }}>
                             <InputLabel id="status-select-label">Status</InputLabel>
                             <Select
                                 labelId="status-select-label"
@@ -196,13 +212,13 @@ function CloudUser(props) {
                             id="name_ko"
                             label="Name(KR)"
                             onChange={(v) => setNameKo(v.target.value)}
-                            defaultValue={nameKo}
+                            value={nameKo}
                         />
                         <TextField
                             id="name_us"
                             label="Name(EN)"
                             onChange={(v) => setNameUs(v.target.value)}
-                            defaultValue={nameUs}
+                            value={nameUs}
                         />
                     </div>
                     <div>
@@ -210,22 +226,22 @@ function CloudUser(props) {
                             id="email"
                             label="Email"
                             onChange={(v) => setEmail(v.target.value)}
-                            defaultValue={email}
+                            value={email}
                         />
-                        
+
                         <TextField
                             id="Phone"
                             label="phone"
                             onChange={(v) => setPhone(v.target.value)}
-                            defaultValue={phone}
+                            value={phone}
                         />
-                        
+
 
                         <TextField
                             id="group"
                             label="Group"
                             onChange={(v) => setGroup(v.target.value)}
-                            defaultValue={group}
+                            value={group}
                         />
                     </div>
                     <div>
@@ -233,25 +249,25 @@ function CloudUser(props) {
                             id="institution"
                             label="Institution"
                             onChange={(v) => setInstitution(v.target.value)}
-                            defaultValue={institution}
+                            value={institution}
                         />
                         <TextField
                             id="major"
                             label="Major"
                             onChange={(v) => setMajor(v.target.value)}
-                            defaultValue={major}
+                            value={major}
                         />
                         <TextField
                             id="position"
                             label="Position"
                             onChange={(v) => setPosition(v.target.value)}
-                            defaultValue={position}
+                            value={position}
                         />
                         <TextField
                             id="adviser"
                             label="Adviser"
                             onChange={(v) => setAdviser(v.target.value)}
-                            defaultValue={adviser}
+                            value={adviser}
                         />
                     </div>
                     <div>
@@ -259,25 +275,25 @@ function CloudUser(props) {
                             id="usage"
                             label="Usage"
                             onChange={(v) => setUsage(v.target.value)}
-                            defaultValue={usage}
+                            value={usage}
                         />
                         <TextField
                             id="quota"
                             label="Quota"
                             onChange={(v) => setQuota(v.target.value)}
-                            defaultValue={quota}
+                            value={quota}
                         />
                         <TextField
                             id="application_date"
                             label="Application Date"
                             onChange={(v) => setApplicationDate(v.target.value)}
-                            defaultValue={applicationDate}
+                            value={applicationDate}
                         />
                         <TextField
                             id="create_date"
                             label="Create Date"
                             onChange={(v) => setCreateDate(v.target.value)}
-                            defaultValue={createDate}
+                            value={createDate}
                         />
                     </div>
                     <div>
@@ -287,7 +303,7 @@ function CloudUser(props) {
                             onChange={(v) => setPerpose(v.target.value)}
                             multiline
                             rows={3}
-                            defaultValue={perpose}
+                            value={perpose}
                         />
                         <TextField
                             id="application_route"
@@ -295,7 +311,7 @@ function CloudUser(props) {
                             onChange={(v) => setApplicationRoute(v.target.value)}
                             multiline
                             rows={3}
-                            defaultValue={applicationRoute}
+                            value={applicationRoute}
                         />
                     </div>
                     <div>
@@ -305,7 +321,7 @@ function CloudUser(props) {
                             onChange={(v) => setEtc(v.target.value)}
                             multiline
                             rows={3}
-                            defaultValue={etc}
+                            value={etc}
                         />
                         <TextField
                             id="history"
@@ -313,7 +329,7 @@ function CloudUser(props) {
                             onChange={(v) => setHistory(v.target.value)}
                             multiline
                             rows={3}
-                            defaultValue={history}
+                            value={history}
                         />
                     </div>
                     <div>
@@ -321,7 +337,7 @@ function CloudUser(props) {
                             id="privateInfo"
                             label="Private Info"
                             onChange={(v) => setPrivateInfo(v.target.value)}
-                            defaultValue={privateInfo}
+                            value={privateInfo}
                         />
                     </div>
                 </Box>
@@ -336,6 +352,6 @@ function CloudUser(props) {
             </div>
         );
     }
-}
+});
 
 export default CloudUser;
