@@ -20,14 +20,15 @@ public class ApplicationFileService {
     @Resource
     private ReactiveMongoTemplate mongoTemplate;
 
-    public String addFile(MultipartFile file) throws IOException { 
+    public ApplicationFile addFile(MultipartFile file) throws IOException { 
         ApplicationFile appliFile = new ApplicationFile();
         appliFile.setFilename(file.getOriginalFilename());
         appliFile.setFileType(file.getContentType());
         appliFile.setFileSize(Long.toString(file.getSize()));
         appliFile.setFile(file.getBytes());
-        Mono<ApplicationFile> result = mongoTemplate.insert(appliFile);
-        return result.block().get_id(); 
+        ApplicationFile result = mongoTemplate.insert(appliFile).block();
+        result.setFile(null);
+        return result; 
     }
 
     public ApplicationFile getFile(String id) { 

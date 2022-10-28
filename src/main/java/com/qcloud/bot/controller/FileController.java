@@ -18,7 +18,7 @@ public class FileController {
     private ApplicationFileService fileService;
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String upload(@RequestParam("file") MultipartFile file) throws IOException {
+    public ApplicationFile upload(@RequestParam("file") MultipartFile file) throws IOException {
         return fileService.addFile(file);
     }
 
