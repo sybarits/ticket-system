@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import axios from 'axios';
 import styled from "styled-components";
 
-import Config from '../config.js';
+import Config from '../Config.js';
 import CloudUserChart from "../statistics/CloudUserChart.js";
 
 function CloudUsers() {

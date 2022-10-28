@@ -1,9 +1,13 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Box, TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { Box, TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl, Input, IconButton } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-import Config from '../config.js';
+import Config from '../Config.js';
+import Util from "../Util.js";
 
 const CloudUser = forwardRef((props, ref) => {
     const context = props.context;
@@ -32,6 +36,19 @@ const CloudUser = forwardRef((props, ref) => {
     const [group, setGroup] = useState("");
     const [userId, setUserId] = useState("");
     const [user, setUser] = useState([]);
+    const [file1Id, setFile1Id] = useState("");
+    const [file1Name, setFile1Name] = useState("");
+    const [file2Id, setFile2Id] = useState("");
+    const [file2Name, setFile2Name] = useState("");
+    const [fileUploadDialogOpen, setFileUploadDialogOpen] = useState("");
+    const [fileDeleteDialogOpen, setFileDeleteDialogOpen] = useState("");
+    const [userDeleteDialogOpen, setUserDeleteDialogOpen] = useState("");
+    
+    const [curFileId, setCurFileId] = useState("");
+
+    const fileInput1 = React.useRef(null);
+    const fileInput2 = React.useRef(null);
+    const saveChangesButton = React.useRef(null);
 
     const params = useParams();
     if (props.userId != undefined) {
@@ -70,6 +87,10 @@ const CloudUser = forwardRef((props, ref) => {
         setPrivateInfo(data[0].private_info);
         setGroup(data[0].group);
         setUserId(data[0].user_id);
+        setFile1Id(data[0].file1_id);
+        setFile1Name(data[0].file1_name);
+        setFile2Id(data[0].file2_id);
+        setFile2Name(data[0].file2_name);
         setUser(data);
     };
 
@@ -83,8 +104,8 @@ const CloudUser = forwardRef((props, ref) => {
             .then(({ data }) => setUserData(data));
     }, []);
 
-    const updateData = (data) => {
-        axios
+    const updateData = async (data) => {
+        await axios
             .patch(Config.getServiceUrl() + "/user", { "userList": data })
             .then(({ data }) => {
                 resultData(data);
@@ -115,7 +136,7 @@ const CloudUser = forwardRef((props, ref) => {
 
     const handleDelete = (e) => {
         setDisable(true);
-        deleteData(id)
+        setUserDeleteDialogOpen(true);
     }
 
     const makeUser = () => {
@@ -142,6 +163,10 @@ const CloudUser = forwardRef((props, ref) => {
         data.private_info = privateInfo;
         data.group = group;
         data.user_id = userId;
+        data.file1_id = file1Id;
+        data.file1_name = file1Name;
+        data.file2_id = file2Id;
+        data.file2_name = file2Name;
         return data;
     }
 
@@ -175,13 +200,138 @@ const CloudUser = forwardRef((props, ref) => {
         setStatus(e.target.value);
     }
 
+    const handleOnCloudUpload1Click = (e) => {
+        setDisable(true);
+        fileInput1.current.click();
+    }
+
+    const handleOnCloudUpload2Click = (e) => {
+        setDisable(true);
+        fileInput2.current.click();
+    }
+
+    const handleOnDeleteIcon1Click = (e, data) => {
+        deleteFile1(data.file1Id);
+    }
+
+    const handleOnDeleteIcon2Click = (e, data) => {
+        deleteFile2(data.file2Id);
+    }
+
+    const handleFileUploadInput1Change = (e) => {
+        const formData = new FormData();
+        formData.append("file", e.target.files[0]);
+        uploadFile1(formData);
+    };
+
+    const handleFileUploadInput2Change = (e) => {
+        const formData = new FormData();
+        formData.append("file", e.target.files[0]);
+        uploadFile2(formData);
+    };
+
+    const uploadFile1 = async (data) => {
+        await axios
+            .post(Config.getServiceUrl() + "/file/upload", data, { headers: { "Content-Type": "multipart/form-data" } })
+            .then(({ data }) => {
+                setFile1Id(data._id);
+                setFile1Name(data.filename);
+                setCurFileId({"num": 1,"id":data._id});
+                setDisable(false);
+                setFileUploadDialogOpen(true);
+            });
+    }
+    const uploadFile2 = async (data) => {
+        await axios
+            .post(Config.getServiceUrl() + "/file/upload", data, { headers: { "Content-Type": "multipart/form-data" } })
+            .then(({ data }) => {
+                setFile2Id(data._id);
+                setFile2Name(data.filename);
+                setCurFileId({"num": 2,"id":data._id});
+                setDisable(false);
+                setFileUploadDialogOpen(true);
+            });
+
+    }
+
+    const deleteFile1 = async (file_id) => {
+        setFile1Id("");
+        setFile1Name("");
+        await axios
+            .delete(Config.getServiceUrl() + "/file/" + file_id)
+            .then(({ data }) => {
+                resultData(data);
+                setCurFileId({"num": 1,"id":file_id});
+                setDisable(false);
+                setFileDeleteDialogOpen(true);
+            });
+    }
+
+    const deleteFile2 = async (file_id) => {
+        setFile2Id("");
+        setFile2Name("");
+        await axios
+            .delete(Config.getServiceUrl() + "/file/" + file_id)
+            .then(({ data }) => {
+                resultData(data);
+                setCurFileId({"num": 2,"id":file_id});
+                setDisable(false);
+                setFileDeleteDialogOpen(true);
+            });
+    }
+
+    const downLoadFile = (file_id) => {
+        axios
+            .get(Config.getServiceUrl() + "/file/download/" + file_id)
+            .then(({ data }) => {
+                Util.fileDownload(data);
+            });
+    }
+
+    const handleFileDownload = (e, data) => {
+        if (data.file1Id != null && data.file1Id != "") {
+            downLoadFile(data.file1Id);
+        } else if (data.file2Id != null && data.file2Id != "") {
+            downLoadFile(data.file2Id);
+        }
+    }
+
+    const handleFileUploadDialogDiscard = () => {
+        if (curFileId.num == 1) {
+            deleteFile1(curFileId.id);
+        } else if (curFileId.num == 2) {
+            deleteFile2(curFileId.id);
+        }
+        setFileUploadDialogOpen(false);
+    };
+
+    const handleFileUploadDialogConfirm = () => {
+        setFileUploadDialogOpen(false);
+        handleSaveChanges();
+    }
+
+    const handleFileDeleteDialogConfirm = () => {
+        setFileDeleteDialogOpen(false);
+        handleSaveChanges();
+    }
+
+    const handleUserDeleteDialogConfirm = () => {
+        deleteData(id);
+        setUserDeleteDialogOpen(false);
+    }
+
+    const handleUserDeleteDialogDiscard = () => {
+        setUserDeleteDialogOpen(false);
+        setDisable(false);
+    }
+
 
     if (user.length != 0 || context == Config.Context().TicketInputs()) {
         return (
             <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
                 {context != Config.Context().TicketInputs() &&
                     <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }}>
-                        <Button variant="outlined" onClick={handleSaveChanges} disabled={disable}>Save Changes</Button>
+                        <Button variant="outlined" ref={saveChangesButton} onClick={handleSaveChanges} disabled={disable}>Save Changes</Button>
                         <Button variant="outlined" onClick={refreshPage}>Reset</Button>
                         <Button variant="outlined" color="error" onClick={handleDelete} disabled={disable}>Delete</Button>
                     </Stack>
@@ -391,6 +541,81 @@ const CloudUser = forwardRef((props, ref) => {
                         <Button variant="outlined" onClick={handleSaveUser} disabled={disable}>Save User</Button>
                     </Stack>
                 }
+                {context != Config.Context().TicketInputs() &&
+                    <Stack spacing={2} direction="row" sx={{ m: 1, justifyContent: 'center' }}>
+                        <input type="file" ref={fileInput1} onChange={handleFileUploadInput1Change} style={{ display: "none" }} />
+                        <input type="file" ref={fileInput2} onChange={handleFileUploadInput2Change} style={{ display: "none" }} />
+                        <div>
+                            <IconButton aria-label="delete">
+                                {(file1Name != null && file1Name != "") && <DeleteIcon onClick={(e) => { handleOnDeleteIcon1Click(e, { file1Id }); }} />}
+                                {(file1Name == null || file1Name == "") && <CloudUploadIcon onClick={(e) => { handleOnCloudUpload1Click(e); }} />}
+                            </IconButton>
+                            <Input placeholder="Upload File 1" value={file1Name} onClick={(e) => { handleFileDownload(e, { file1Id }); }} sx={{ cursor: 'pointer' }} />
+                        </div>
+                        <div>
+                            <IconButton aria-label="delete">
+                                {(file2Name != null && file2Name != "") && <DeleteIcon onClick={(e) => { handleOnDeleteIcon2Click(e, { file2Id }); }} />}
+                                {(file2Name == null || file2Name == "") && <CloudUploadIcon onClick={(e) => { handleOnCloudUpload2Click(e); }} />}
+                            </IconButton>
+                            <Input placeholder="Upload File 2" value={file2Name} onClick={(e) => { handleFileDownload(e, { file2Id }); }} sx={{ cursor: 'pointer' }} />
+                        </div>
+                    </Stack>
+                }
+                <Dialog
+                    open={fileUploadDialogOpen}
+                    // TransitionComponent={Transition}
+                    keepMounted
+                    // onClose={handleClose}
+                    aria-describedby="alert-dialog-upload-description"
+                >
+                    <DialogTitle>File Has been uploaded</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-upload-description">
+                            A file has been uplaoded.
+                            If you click the Confirm button, the file will be saved.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleFileUploadDialogConfirm}>Confirm</Button>
+                        <Button onClick={handleFileUploadDialogDiscard}>Discard</Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog
+                    open={fileDeleteDialogOpen}
+                    // TransitionComponent={Transition}
+                    keepMounted
+                    // onClose={handleClose}
+                    aria-describedby="alert-dialog-file-delete-description"
+                >
+                    <DialogTitle>File Has been deleted</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-file-delete-description">
+                            A file has been deleted.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleFileDeleteDialogConfirm}>Confirm</Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog
+                    open={userDeleteDialogOpen}
+                    // TransitionComponent={Transition}
+                    keepMounted
+                    // onClose={handleClose}
+                    aria-describedby="alert-dialog-file-delete-description"
+                >
+                    <DialogTitle>A User will be deleted</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-file-delete-description">
+                            A user will be deleted.
+                            If you click confirm button, the user is going to be deleted.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleUserDeleteDialogConfirm}>Confirm</Button>
+                        <Button onClick={handleUserDeleteDialogDiscard}>Discard</Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         );
     } else {
