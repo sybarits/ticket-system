@@ -81,7 +81,6 @@ public class QCloudUserService implements UserService {
         for (String id : deleteIdList) {
             ids.add(id);
             UserDto user = mongoTemplate.findOne(Query.query(Criteria.where("_id").is(id)), UserDto.class).block();
-            System.out.println("user delete: " + user);
             if (user.getFile1_id() != null && !user.getFile1_id().equals("")) {
                 mongoTemplate.findAndRemove(Query.query(Criteria.where("_id").is(user.getFile1_id())), ApplicationFile.class).block();
             }

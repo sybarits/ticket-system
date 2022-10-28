@@ -121,7 +121,9 @@ function CloudUserChart(props) {
         // },
         plugins: {
             datalabels: {
-                display: true
+                font: {
+                    weight: 'bold'
+                },
             }
         }
     };
@@ -144,7 +146,15 @@ function CloudUserChart(props) {
     const lineOptions = {
         plugins: {
             datalabels: {
-                display: false
+                display: function(context) {
+                    return context.dataset.data[context.dataIndex] > 0;
+                },
+                font: {
+                    weight: 'bold'
+                },
+                formatter: Math.round,
+                anchor: 'start',
+                align: 'end',
             }
         },
         maintainAspectRatio: false,
