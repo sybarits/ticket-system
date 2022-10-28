@@ -26,6 +26,7 @@ public class HistoryMaker {
     private static final String Adviser_changed = " Adviser is changed from ";
     private static final String Status_changed = " Status is changed from ";
     private static final String Group_changed = "Group is changed from ";
+    private static final String File_changed = "File is changed from ";
     
     private static final String Ticket_type_changed = "Group is changed from ";
     private static final String Desc_changed = " Desc is changed from ";
@@ -84,6 +85,12 @@ public class HistoryMaker {
         }
         if (prev.getGroup() != null && !prev.getGroup().equals("") && !prev.getGroup().equals(next.getGroup())) {
             result.append(nowDate + Group_changed + prev.getGroup() + TO + next.getGroup() + "\n");
+        }
+        if (prev.getFile1_name() != null && !prev.getFile1_name().equals("") && !prev.getFile1_name().equals(next.getFile1_name())) {
+            result.append(nowDate + File_changed + prev.getFile1_name() + TO + next.getFile1_name() + "\n");
+        }
+        if (prev.getFile2_name() != null && !prev.getFile2_name().equals("") && !prev.getFile2_name().equals(next.getFile2_name())) {
+            result.append(nowDate + File_changed + prev.getFile2_name() + TO + next.getFile2_name() + "\n");
         }
         
         return result.toString();
