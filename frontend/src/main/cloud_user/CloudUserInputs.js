@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Box, TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import * as XLSX from 'xlsx';
-import Config from '../config.js';
+import Config from '../Config.js';
 
 const CloudUserInputs = forwardRef((props, ref) => {
     const context = props.context;

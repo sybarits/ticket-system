@@ -21,7 +21,7 @@ import {
 import { Doughnut, Line } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-import Config from '../config.js';
+import Config from '../Config.js';
 
 
 function CloudUserChart(props) {

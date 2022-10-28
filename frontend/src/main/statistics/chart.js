@@ -19,7 +19,7 @@ import { Bar } from 'react-chartjs-2';
 
 
 
-import Config from '../config.js';
+import Config from '../Config.js';
 
 
 function Chart() {

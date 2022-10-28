@@ -4,7 +4,7 @@ import axios from 'axios';
 import CloudUser from '../cloud_user/CloudUser.js';
 import { Box, TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 
-import Config from '../config.js';
+import Config from '../Config.js';
 import CloudUserInputs from "../cloud_user/CloudUserInputs.js";
 
 function TicketInputs(props) {

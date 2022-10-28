@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 
-import Config from '../config.js';
+import Config from '../Config.js';
 
 
 function Tickets() {
