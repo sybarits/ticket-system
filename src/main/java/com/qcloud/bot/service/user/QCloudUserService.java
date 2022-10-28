@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import com.qcloud.bot.model.ApplicationFile;
 import com.qcloud.bot.model.RequestDto;
 import com.qcloud.bot.model.user.UserDto;
 import com.qcloud.bot.model.user.UserStatus;
@@ -79,6 +80,14 @@ public class QCloudUserService implements UserService {
         List<String> ids = new ArrayList<>();
         for (String id : deleteIdList) {
             ids.add(id);
+            UserDto user = mongoTemplate.findOne(Query.query(Criteria.where("_id").is(id)), UserDto.class).block();
+            System.out.println("user delete: " + user);
+            if (user.getFile1_id() != null && !user.getFile1_id().equals("")) {
+                mongoTemplate.findAndRemove(Query.query(Criteria.where("_id").is(user.getFile1_id())), ApplicationFile.class).block();
+            }
+            if (user.getFile2_id() != null && !user.getFile2_id().equals("")) {
+                mongoTemplate.findAndRemove(Query.query(Criteria.where("_id").is(user.getFile2_id())), ApplicationFile.class).block();
+            }
         }
 
         Query query = new Query(Criteria.where("_id").in(ids));
