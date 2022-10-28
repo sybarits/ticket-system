@@ -7,6 +7,7 @@ import lombok.Data;
 @Document(collection = "users")
 @Data
 public class UserDto {
+
     private String _id;
     private CloudType cloud_service;
     private String user_num;
@@ -31,5 +32,9 @@ public class UserDto {
     private String group;
     private String etc;
     private String history;
+    private String file1_id;
+    private String file1_name;
+    private String file2_id;
+    private String file2_name;
 
 }
