@@ -53,6 +53,7 @@ function Ticket() {
             .patch(Config.getServiceUrl() + "/ticket", { "ticketList": data })
             .then(({ data }) => {
                 Config.resultData(data);
+                setTicketData(data);
                 setDisable(false);
             });
     };
