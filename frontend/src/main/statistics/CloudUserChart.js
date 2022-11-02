@@ -135,9 +135,9 @@ function CloudUserChart(props) {
             // label: 'My First Dataset',
             data: totalPieChartData,
             backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 205, 86)'
+                'rgb(0,64,178)',
+                'rgb(248, 155, 51)',
+                'rgb(23, 190, 187)'
             ],
             hoverOffset: 4
         }]
@@ -173,24 +173,24 @@ function CloudUserChart(props) {
                 label: Config.getCloudServiceTypeList()[0],
                 // data: [1, 2, 4, 2, 2],
                 data: totalLineChartData[0],
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(0,64,178)',
+                backgroundColor: 'rgb(0,64,178)',
                 tension: 0.3,
             },
             {
                 label: Config.getCloudServiceTypeList()[1],
                 // data: [2, 5, 3, 1, 1],
                 data: totalLineChartData[1],
-                borderColor: 'rgb(53, 162, 235)',
-                backgroundColor: 'rgb(53, 162, 235)',
+                borderColor: 'rgb(248, 155, 51)',
+                backgroundColor: 'rgb(248, 155, 51)',
                 tension: 0.3,
             },
             {
                 label: Config.getCloudServiceTypeList()[2],
                 // data: [6, 7, 4, 6, 6],
                 data: totalLineChartData[2],
-                borderColor: 'rgb(255, 205, 86)',
-                backgroundColor: 'rgb(255, 205, 86)',
+                borderColor: 'rgb(23, 190, 187)',
+                backgroundColor: 'rgb(23, 190, 187)',
                 tension: 0.3,
             },
         ],
