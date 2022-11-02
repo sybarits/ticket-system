@@ -19,7 +19,7 @@ import { Bar } from 'react-chartjs-2';
 
 
 
-import Config from '../Config.js';
+import Var from '../Var.js';
 
 
 function Chart() {
@@ -31,7 +31,7 @@ function Chart() {
     // const body = {"query_string": params.ticketId}
     useEffect(() => {
         axios
-            .get(Config.getServiceUrl()+"ticket/" + params.ticketId)
+            .get(Var.getServiceUrl()+"ticket/" + params.ticketId)
             .then(({ data }) => setTicket(data));
     }, []);
 

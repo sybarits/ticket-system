@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import axios from 'axios';
 import styled from "styled-components";
 
-import Config from '../Config.js';
+import Var from "../Var.js";
 import CloudUserChart from "../statistics/CloudUserChart.js";
 
 function CloudUsers() {
@@ -69,7 +69,7 @@ function CloudUsers() {
             params.api.setRowData(data)
         };
         axios
-            .get(Config.getServiceUrl() + "/user/all")
+            .get(Var.getServiceUrl() + "/user/all")
             .then(({ data }) => {
                 updateData(data);
                 setUsers(data);

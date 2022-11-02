@@ -4,7 +4,7 @@ import axios from 'axios';
 import CloudUser from '../cloud_user/CloudUser.js';
 import { Box, TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 
-import Config from '../Config.js';
+import Var from '../Var.js';
 import CloudUserInputs from "../cloud_user/CloudUserInputs.js";
 
 function TicketInputs(props) {
@@ -42,7 +42,7 @@ function TicketInputs(props) {
 
     const uploadData = (data) => {
         axios
-            .put(Config.getServiceUrl() + "/ticket", { "ticketList": data })
+            .put(Var.getServiceUrl() + "/ticket", { "ticketList": data })
             .then(({ data }) => {
                 resultData(data);
                 setDisable(false);
@@ -70,7 +70,7 @@ function TicketInputs(props) {
     // const body = {"query_string": params.ticketId}
     // useEffect(() => {
     //     axios
-    //       .get(Config.getServiceUrl()+"ticket/"+params.ticketId)
+    //       .get(Var.getServiceUrl()+"ticket/"+params.ticketId)
     //       .then(({data}) => setTicket(data));
     // }, []);
 
@@ -78,7 +78,7 @@ function TicketInputs(props) {
         <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
             <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }} >
                 <Button variant="outlined" onClick={handleSaveNewTicket} disabled={disable}>Save New Ticket</Button>
-                <Button variant="outlined" onClick={Config.refreshPage}>Reset</Button>
+                <Button variant="outlined" onClick={Var.refreshPage}>Reset</Button>
             </Stack>
             <Box
                 component="form"
@@ -169,7 +169,7 @@ function TicketInputs(props) {
                 </div>
             </Box>
             <hr />
-            {ticketType == "USER" && <CloudUserInputs context={Config.Context().TicketInputs()} ref={cloudUserInputsRef} />}
+            {ticketType == "USER" && <CloudUserInputs context={Var.Context().TicketInputs()} ref={cloudUserInputsRef} />}
         </div>
     );
 }

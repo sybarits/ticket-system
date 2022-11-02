@@ -22,43 +22,59 @@ import { Doughnut, Line } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import Var from '../Var.js';
-import DwaveUserChart from "./DwaveUserChart.js";
-import IonQUserChart from "./IonQUserChart.js";
-import IBMQUserChart from "./IBMQUserChart.js";
 
 
-function CloudUserChart(props) {
-    const chartType = props.type;
+function IBMQUserChart(props) {
 
     ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels, Title, CategoryScale, LinearScale, PointElement, LineElement,);
     const [totalPieChartData, setTotalPieChartData] = useState([]);
     const [today, setToday] = useState([]);
     const [totalLineChartData, setTotalLineChartData] = useState([]);
     const [totalLineChartLabels, setTotalLineChartLabels] = useState([]);
+    const [totalInstPieChartData, setTotalInstPieChartData] = useState([]);
 
-    const makeTotalPieChartData = (data) => {
-        const cloudServiceList = Var.getCloudServiceTypeList();
+
+    const makeDwavePieChartData = (data) => {
+        const userGroupList = Var.getEduGroupList();
         const result = [0, 0, 0];
         const len = data.length;
         for (let i = 0; i < len; i++) {
-            result[cloudServiceList.indexOf(data[i].cloud_service)] += 1;
+            if (data[i].cloud_service == "IBMQ") {
+                result[userGroupList.indexOf(data[i].group)] += 1;
+            }
         }
         setTotalPieChartData(result);
         return result;
     }
 
-    const makeApplicationLineChartData = (data) => {
+    const makeDwaveLineChartData = (data) => {
         const cloudServiceList = Var.getCloudServiceTypeList();
         const result = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
         const len = data.length;
         const monthLabels = makeMonthLabels();
         for (let i = 0; i < len; i++) {
-            const index = getMonthIndex(monthLabels, data[i].application_date);
-            if (index != -1) {
-                result[cloudServiceList.indexOf(data[i].cloud_service)][index] += 1;
+            if (data[i].cloud_service == "IBMQ") {
+                const index = getMonthIndex(monthLabels, data[i].application_date);
+                if (index != -1) {
+                    result[cloudServiceList.indexOf(data[i].cloud_service)][index] += 1;
+                }
             }
         }
+
         setTotalLineChartData(result);
+        return result;
+    }
+
+    const makeDwaveInstPieChartData = (data) => {
+        const userInstitutionList = Var.getInstitutionList();
+        const result = [0, 0, 0, 0, 0, 0, 0, 0];
+        const len = data.length;
+        for (let i = 0; i < len; i++) {
+            if (data[i].cloud_service == "IBMQ") {
+                result[userInstitutionList.indexOf(data[i].institution)] += 1;
+            }
+        }
+        setTotalInstPieChartData(result);
         return result;
     }
 
@@ -107,8 +123,9 @@ function CloudUserChart(props) {
         axios
             .get(Var.getServiceUrl() + "/user/all")
             .then(({ data }) => {
-                makeTotalPieChartData(data);
-                makeApplicationLineChartData(data);
+                makeDwavePieChartData(data);
+                makeDwaveLineChartData(data);
+                makeDwaveInstPieChartData(data);
             });
     }, []);
 
@@ -134,14 +151,13 @@ function CloudUserChart(props) {
 
     const pieData = {
         // plugins: [ChartDataLabels],
-        labels: Var.getCloudServiceTypeList(),
+        labels: Var.getEduGroupList(),
         datasets: [{
-            // label: 'My First Dataset',
             data: totalPieChartData,
             backgroundColor: [
-                'rgb(0, 64, 178)',
-                'rgb(248, 155, 51)',
-                'rgb(23, 190, 187)'
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 205, 86)'
             ],
             hoverOffset: 4
         }]
@@ -177,44 +193,73 @@ function CloudUserChart(props) {
                 label: Var.getCloudServiceTypeList()[0],
                 data: totalLineChartData[0],
                 borderColor: 'rgb(0, 64, 178)',
-                backgroundColor: 'rgb(0,64,178)',
-                tension: 0.3,
-            },
-            {
-                label: Var.getCloudServiceTypeList()[1],
-                data: totalLineChartData[1],
-                borderColor: 'rgb(248, 155, 51)',
-                backgroundColor: 'rgb(248, 155, 51)',
-                tension: 0.3,
-            },
-            {
-                label: Var.getCloudServiceTypeList()[2],
-                data: totalLineChartData[2],
-                borderColor: 'rgb(23, 190, 187)',
-                backgroundColor: 'rgb(23, 190, 187)',
+                backgroundColor: 'rgb(0, 64, 178)',
                 tension: 0.3,
             },
         ],
-    }
+    };
+
+    const instPieOptions = {
+        // responsive: false,
+        // scales: {
+        //     yAxes: [
+        //         {
+        //             ticks: {
+        //                 beginAtZero: true,
+        //             },
+        //         },
+        //     ],
+        // },
+        plugins: {
+            datalabels: {
+                font: {
+                    weight: 'bold'
+                },
+            }
+        }
+    };
+
+    const instPieData = {
+        // plugins: [ChartDataLabels],
+        labels: Var.getInstitutionList(),
+        datasets: [{
+            data: totalInstPieChartData,
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(0, 205, 86)',
+                'rgb(0, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 0, 86)',
+                'rgb(255, 99, 0)',
+                'rgb(54, 162, 0)',
+            ],
+            hoverOffset: 4
+        }]
+    };
 
 
     return (
         <div>
             <div style={{ display: "inline-flex" }}>
                 <div style={{ width: 300, height: 400, margin: '0 0 0 0' }}>
-                    <h2>Total Application</h2>
+                    <h2>IBMQ Cloud Service User</h2>
                     <Doughnut data={pieData} options={pieOptions} />
                 </div>
                 <div style={{ width: 800, height: 300, margin: '0 0 0 0' }}>
-                    <h2>Application State</h2>
+                    <h2>IBMQ Service Application State</h2>
                     <Line data={lineData} options={lineOptions} />
                 </div>
             </div>
-            <DwaveUserChart />
-            <IonQUserChart />
-            <IBMQUserChart />
+            <div style={{ display: "inline-flex" }}>
+                <div style={{ width: 500, height: 400, margin: '0 0 0 0' }}>
+                    <h2>IBMQ Cloud Service User By Institutions</h2>
+                    <Doughnut data={instPieData} options={instPieOptions} />
+                </div>
+            </div>
         </div>
     );
+
 }
 
-export default CloudUserChart;
+export default IBMQUserChart;

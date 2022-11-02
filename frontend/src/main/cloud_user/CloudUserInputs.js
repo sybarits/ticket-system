@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Box, TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import * as XLSX from 'xlsx';
-import Config from '../Config.js';
+import Var from '../Var.js';
 
 const CloudUserInputs = forwardRef((props, ref) => {
     const context = props.context;
@@ -113,7 +113,7 @@ const CloudUserInputs = forwardRef((props, ref) => {
 
     const uploadData = (data) => {
         axios
-            .put(Config.getServiceUrl() + "/user", { "userList": data })
+            .put(Var.getServiceUrl() + "/user", { "userList": data })
             .then(({ data }) => {
                 resultData(data);
                 setDisable(false);
@@ -212,7 +212,7 @@ const CloudUserInputs = forwardRef((props, ref) => {
 
     return (
         <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
-            {context != Config.Context().TicketInputs() &&
+            {context != Var.Context().TicketInputs() &&
                 <div>
                     <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }} >
                         <Select

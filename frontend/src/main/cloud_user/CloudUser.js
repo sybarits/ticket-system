@@ -6,7 +6,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } 
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-import Config from '../Config.js';
+import Var from '../Var.js';
 import Util from "../Util.js";
 
 const CloudUser = forwardRef((props, ref) => {
@@ -43,7 +43,7 @@ const CloudUser = forwardRef((props, ref) => {
     const [fileUploadDialogOpen, setFileUploadDialogOpen] = useState("");
     const [fileDeleteDialogOpen, setFileDeleteDialogOpen] = useState("");
     const [userDeleteDialogOpen, setUserDeleteDialogOpen] = useState("");
-    
+
     const [curFileId, setCurFileId] = useState("");
 
     const fileInput1 = React.useRef(null);
@@ -95,18 +95,18 @@ const CloudUser = forwardRef((props, ref) => {
     };
 
     useEffect(() => {
-        if (context == Config.Context().TicketInputs()) {
+        if (context == Var.Context().TicketInputs()) {
             setUserData(props.user);
             return;
         }
         axios
-            .get(Config.getServiceUrl() + "/user/" + params.userId)
+            .get(Var.getServiceUrl() + "/user/" + params.userId)
             .then(({ data }) => setUserData(data));
     }, []);
 
     const updateData = async (data) => {
         await axios
-            .patch(Config.getServiceUrl() + "/user", { "userList": data })
+            .patch(Var.getServiceUrl() + "/user", { "userList": data })
             .then(({ data }) => {
                 resultData(data);
                 setUserData(data);
@@ -116,7 +116,7 @@ const CloudUser = forwardRef((props, ref) => {
 
     const insertData = (data) => {
         axios
-            .put(Config.getServiceUrl() + "/user", { "userList": data })
+            .put(Var.getServiceUrl() + "/user", { "userList": data })
             .then(({ data }) => {
                 resultData(data);
                 setUserData(data);
@@ -126,7 +126,7 @@ const CloudUser = forwardRef((props, ref) => {
 
     const deleteData = (data) => {
         axios
-            .delete(Config.getServiceUrl() + "/user?deleteIdList=" + data)
+            .delete(Var.getServiceUrl() + "/user?deleteIdList=" + data)
             .then(({ data }) => {
                 resultData(data);
                 refreshPage();
@@ -232,22 +232,22 @@ const CloudUser = forwardRef((props, ref) => {
 
     const uploadFile1 = async (data) => {
         await axios
-            .post(Config.getServiceUrl() + "/file/upload", data, { headers: { "Content-Type": "multipart/form-data" } })
+            .post(Var.getServiceUrl() + "/file/upload", data, { headers: { "Content-Type": "multipart/form-data" } })
             .then(({ data }) => {
                 setFile1Id(data._id);
                 setFile1Name(data.filename);
-                setCurFileId({"num": 1,"id":data._id});
+                setCurFileId({ "num": 1, "id": data._id });
                 setDisable(false);
                 setFileUploadDialogOpen(true);
             });
     }
     const uploadFile2 = async (data) => {
         await axios
-            .post(Config.getServiceUrl() + "/file/upload", data, { headers: { "Content-Type": "multipart/form-data" } })
+            .post(Var.getServiceUrl() + "/file/upload", data, { headers: { "Content-Type": "multipart/form-data" } })
             .then(({ data }) => {
                 setFile2Id(data._id);
                 setFile2Name(data.filename);
-                setCurFileId({"num": 2,"id":data._id});
+                setCurFileId({ "num": 2, "id": data._id });
                 setDisable(false);
                 setFileUploadDialogOpen(true);
             });
@@ -258,10 +258,10 @@ const CloudUser = forwardRef((props, ref) => {
         setFile1Id("");
         setFile1Name("");
         await axios
-            .delete(Config.getServiceUrl() + "/file/" + file_id)
+            .delete(Var.getServiceUrl() + "/file/" + file_id)
             .then(({ data }) => {
                 resultData(data);
-                setCurFileId({"num": 1,"id":file_id});
+                setCurFileId({ "num": 1, "id": file_id });
                 setDisable(false);
                 setFileDeleteDialogOpen(true);
             });
@@ -271,10 +271,10 @@ const CloudUser = forwardRef((props, ref) => {
         setFile2Id("");
         setFile2Name("");
         await axios
-            .delete(Config.getServiceUrl() + "/file/" + file_id)
+            .delete(Var.getServiceUrl() + "/file/" + file_id)
             .then(({ data }) => {
                 resultData(data);
-                setCurFileId({"num": 2,"id":file_id});
+                setCurFileId({ "num": 2, "id": file_id });
                 setDisable(false);
                 setFileDeleteDialogOpen(true);
             });
@@ -282,7 +282,7 @@ const CloudUser = forwardRef((props, ref) => {
 
     const downLoadFile = (file_id) => {
         axios
-            .get(Config.getServiceUrl() + "/file/download/" + file_id)
+            .get(Var.getServiceUrl() + "/file/download/" + file_id)
             .then(({ data }) => {
                 Util.fileDownload(data);
             });
@@ -326,10 +326,10 @@ const CloudUser = forwardRef((props, ref) => {
     }
 
 
-    if (user.length != 0 || context == Config.Context().TicketInputs()) {
+    if (user.length != 0 || context == Var.Context().TicketInputs()) {
         return (
             <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
-                {context != Config.Context().TicketInputs() &&
+                {context != Var.Context().TicketInputs() &&
                     <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }}>
                         <Button variant="outlined" ref={saveChangesButton} onClick={handleSaveChanges} disabled={disable}>Save Changes</Button>
                         <Button variant="outlined" onClick={refreshPage}>Reset</Button>
@@ -406,13 +406,37 @@ const CloudUser = forwardRef((props, ref) => {
                             defaultValue={""}
                             value={phone}
                         />
-                        <TextField
-                            id="group"
-                            label="Group"
-                            onChange={(v) => setGroup(v.target.value)}
-                            defaultValue={""}
-                            value={group}
-                        />
+                        <FormControl sx={{ m: 1, minWidth: 200 }}>
+                            <InputLabel id="user-group-select-label">Group</InputLabel>
+                            {cloudService == "IBMQ" &&
+                                <Select
+                                    labelId="user-group-select-label"
+                                    id="user-group-select"
+                                    value={group}
+                                    label="Group"
+                                    onChange={(v) => setGroup(v.target.value)}
+                                >
+                                    <MenuItem value={"EMPLOYEE"}>EMPLOYEE</MenuItem>
+                                    <MenuItem value={"GRADUATE"}>GRADUATE</MenuItem>
+                                    <MenuItem value={"STUDENT"}>STUDENT</MenuItem>
+
+                                </Select>
+                            }
+                            {cloudService != "IBMQ" &&
+                                <Select
+                                    labelId="user-group-select-label"
+                                    id="user-group-select"
+                                    value={group}
+                                    label="Group"
+                                    onChange={(v) => setGroup(v.target.value)}
+                                >
+                                    <MenuItem value={"INDUSTRY"}>INDUSTRY</MenuItem>
+                                    <MenuItem value={"RESEARCH"}>RESEARCH</MenuItem>
+                                    <MenuItem value={"EDUCATION"}>EDUCATION</MenuItem>
+
+                                </Select>
+                            }
+                        </FormControl>
                         <TextField
                             id="user_id"
                             label="User ID"
@@ -536,12 +560,12 @@ const CloudUser = forwardRef((props, ref) => {
                         />
                     </div>
                 </Box>
-                {context == Config.Context().TicketInputs() &&
+                {context == Var.Context().TicketInputs() &&
                     <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }}>
                         <Button variant="outlined" onClick={handleSaveUser} disabled={disable}>Save User</Button>
                     </Stack>
                 }
-                {context != Config.Context().TicketInputs() &&
+                {context != Var.Context().TicketInputs() &&
                     <Stack spacing={2} direction="row" sx={{ m: 1, justifyContent: 'center' }}>
                         <input type="file" ref={fileInput1} onChange={handleFileUploadInput1Change} style={{ display: "none" }} />
                         <input type="file" ref={fileInput2} onChange={handleFileUploadInput2Change} style={{ display: "none" }} />

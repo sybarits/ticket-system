@@ -4,7 +4,7 @@ import axios from 'axios';
 import CloudUser from '../cloud_user/CloudUser.js';
 import { Box, TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 
-import Config from '../Config.js';
+import Var from '../Var.js';
 
 function Ticket() {
 
@@ -44,15 +44,15 @@ function Ticket() {
 
     useEffect(() => {
         axios
-            .get(Config.getServiceUrl() + "/ticket/" + params.ticketId)
+            .get(Var.getServiceUrl() + "/ticket/" + params.ticketId)
             .then(({ data }) => setTicketData(data));
     }, []);
 
     const updateData = (data) => {
         axios
-            .patch(Config.getServiceUrl() + "/ticket", { "ticketList": data })
+            .patch(Var.getServiceUrl() + "/ticket", { "ticketList": data })
             .then(({ data }) => {
-                Config.resultData(data);
+                Var.resultData(data);
                 setTicketData(data);
                 setDisable(false);
             });
@@ -60,10 +60,10 @@ function Ticket() {
 
     const deleteData = (data) => {
         axios
-            .delete(Config.getServiceUrl() + "/ticket?deleteIdList=" + data)
+            .delete(Var.getServiceUrl() + "/ticket?deleteIdList=" + data)
             .then(({ data }) => {
-                Config.resultData(data);
-                Config.refreshPage();
+                Var.resultData(data);
+                Var.refreshPage();
                 // setDisable(false);
             });
     };
@@ -115,7 +115,7 @@ function Ticket() {
         <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
             <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }} >
                 <Button variant="outlined" onClick={handleSaveChanges} disabled={disable}>Save Changes</Button>
-                <Button variant="outlined" onClick={Config.refreshPage}>Reset</Button>
+                <Button variant="outlined" onClick={Var.refreshPage}>Reset</Button>
             </Stack>
             <Box
                 component="form"
@@ -206,7 +206,7 @@ function Ticket() {
                 </div>
             </Box>
             <hr />
-            {ticketType == "USER" && <CloudUser context={Config.Context().TicketInputs()} ref={cloudUserRef} user={[user]} handleSaveChanges={handleSaveChanges} />}
+            {ticketType == "USER" && <CloudUser context={Var.Context().TicketInputs()} ref={cloudUserRef} user={[user]} handleSaveChanges={handleSaveChanges} />}
         </div>
     );
 

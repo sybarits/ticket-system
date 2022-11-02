@@ -42,7 +42,8 @@ public class IonQGSheetsServiceImpl implements GSheetsService {
         } else {
             for (List row : values) {
                 if (row.size() > 0) {
-                    System.out.println(row.get(0).toString());
+                    System.out.println("row size is " + row.size());
+                    System.out.println(row.toString());
                     // System.out.println(row.get(1).toString());
                     UserDto user = new UserDto();
                     user.setApplication_date(row.get(0).toString());
@@ -56,8 +57,9 @@ public class IonQGSheetsServiceImpl implements GSheetsService {
                     user.setEmail(row.get(8).toString());
                     user.setPhone(row.get(9).toString());
                     user.setPerpose(row.get(10).toString());
-                    user.setApplication_route(row.get(14).toString());
-                    mongoTemplate.insert(user);
+                    // user.setApplication_route(row.get(14).toString());
+                    // mongoTemplate.insert(user);
+                    System.out.println(user.toString());
                 }
             }
         }
@@ -68,6 +70,12 @@ public class IonQGSheetsServiceImpl implements GSheetsService {
     public ValueRange getData(SheetDto sheet) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    public static void main(String[] args) {
+        IonQGSheetsServiceImpl ionqSheetService = new IonQGSheetsServiceImpl();
+        SheetDto sh = new SheetDto();
+        ionqSheetService.getDataAll(sh);
     }
     
 }

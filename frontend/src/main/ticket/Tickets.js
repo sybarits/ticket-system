@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 
-import Config from '../Config.js';
+import Var from '../Var.js';
 
 
 function Tickets() {
@@ -59,7 +59,7 @@ function Tickets() {
     const onGridReady = (params) => {
         const updateData = (data) => params.api.setRowData(data);
         axios
-            .get(Config.getServiceUrl() + "/ticket/all")
+            .get(Var.getServiceUrl() + "/ticket/all")
             .then(({ data }) => updateData(data));
     };
 
