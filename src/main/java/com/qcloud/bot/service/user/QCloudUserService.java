@@ -57,7 +57,9 @@ public class QCloudUserService implements UserService {
             if (user.getApplication_date() == null || user.getApplication_date().equals("")) {
                 user.setApplication_date(sdf.format(new Date()));
             }
-            user.setStatus(UserStatus.APPLICATION);
+            if (user.getStatus() == null || user.getStatus().equals("")) {
+                user.setStatus(UserStatus.APPLICATION);
+            }
         }
         Flux<UserDto> result = mongoTemplate.insertAll(userList);
         return result.collectList().block();
