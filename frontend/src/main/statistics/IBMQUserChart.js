@@ -210,17 +210,18 @@ function IBMQUserChart(props) {
         //         },
         //     ],
         // },
-        plugins: {
+        plugins: [{
             datalabels: {
                 font: {
                     weight: 'bold'
                 },
-            }
-        }
+            },
+
+        }]
     };
 
     const instPieData = {
-        // plugins: [ChartDataLabels],
+        // plugins: [instPlugin],
         labels: Var.getInstitutionList(),
         datasets: [{
             data: totalInstPieChartData,
@@ -238,6 +239,30 @@ function IBMQUserChart(props) {
         }]
     };
 
+    const instPlugins = [{
+        id: 'text',
+        beforeDraw: function (chart, a, b) {
+            // afterDraw: function (chart, a, b) {
+            const width = chart.width;
+            const height = chart.height;
+            const ctx = chart.ctx;
+
+            ctx.restore();
+            const fontSize = (height / 214).toFixed(2);
+            ctx.font = fontSize + "em sans-serif";
+            ctx.textBaseline = "middle";
+            console.log("totalInstPieChartData", totalInstPieChartData);
+            const text = totalInstPieChartData.reduce(function add(sum, curr) {
+                return sum + curr;
+            }, 0) + " total";
+            const textX = Math.round((width - ctx.measureText(text).width) / 2);
+            const textY = height / 2 + 30;
+
+            ctx.fillText(text, textX, textY);
+            ctx.save();
+        }
+    }];
+
 
     return (
         <div>
@@ -251,7 +276,12 @@ function IBMQUserChart(props) {
                     <Line data={lineData} options={lineOptions} />
                 </div>
             </div>
-            <div style={{ display: "inline-flex" }}>
+            <div style={{ display: "inline-flex", position: "relative" }}>
+                <div style={{ position: "absolute", margin: '300 0 0 0', top: 340, left: 220 }}>
+                    {"total: " + totalInstPieChartData.reduce(function add(sum, curr) {
+                        return sum + curr;
+                    }, 0)}
+                </div>
                 <div style={{ width: 500, height: 400, margin: '0 0 0 0' }}>
                     <h2>IBMQ Cloud Service User By Institutions</h2>
                     <Doughnut data={instPieData} options={instPieOptions} />
