@@ -36,6 +36,7 @@ function CloudUsers() {
             headerName: 'Cloud Type', field: 'cloud_service',
             width: 130,
         },
+        { headerName: 'Status', field: 'status' },
         { headerName: 'Name', field: 'name_ko' },
         { headerName: 'Name', field: 'name_us' },
         { headerName: 'Email', field: 'email', flex: 2 },
