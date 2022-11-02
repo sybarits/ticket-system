@@ -19,18 +19,19 @@ function Tickets() {
     const BtnCellRenderer = (e) => {
         return (
             // <button onClick={(params) => btnClickedHandler(params, e)}>Edit</button>
-            <Link to={"/ticket/"+e.data._id}
-                        key={e.data._id}
-                        style={{ color: "gray", textDecoration: "none" }}
-                        activestyle={{ color: "black" }}>
-                        <div> Open </div>
-                    </Link>
+            <Link to={"/ticket/" + e.data._id}
+                key={e.data._id}
+                style={{ color: "gray", textDecoration: "none" }}
+                activestyle={{ color: "black" }}>
+                <div> Open </div>
+            </Link>
         )
     }
     const columnDefs = [
-        { headerName: 'Ticket Type', field: 'ticket_type' },
         { headerName: 'Status', field: 'status' },
-        { headerName: 'Create Time', field: 'create_time' },
+        { headerName: 'Ticket Type', field: 'ticket_type' },
+        { headerName: 'Create Time', field: 'create_date', sort: "desc" },
+        { headerName: 'Last Modify Date', field: 'last_modify_date' },
         { headerName: 'Desc', field: 'desc' },
         {
             headerName: 'Action', field: 'create_time',
@@ -46,7 +47,7 @@ function Tickets() {
 
     const refreshPage = (e) => {
         window.location.reload(false);
-    } 
+    }
 
     const [tickets, setTickets] = useState([]);
     useEffect(() => {
