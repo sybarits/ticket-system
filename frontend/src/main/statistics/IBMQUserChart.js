@@ -227,10 +227,10 @@ function IBMQUserChart(props) {
             data: totalInstPieChartData,
             backgroundColor: [
                 'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
+                'rgb(248,155,51)',
                 'rgb(0, 205, 86)',
-                'rgb(0, 99, 132)',
                 'rgb(54, 162, 235)',
+                'rgb(255, 205, 86)',
                 'rgb(255, 0, 86)',
                 'rgb(255, 99, 0)',
                 'rgb(54, 162, 0)',
