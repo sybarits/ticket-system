@@ -58,7 +58,7 @@ function DwaveUserChart(props) {
                 }
             }
         }
-        
+
         setTotalLineChartData(result);
         return result;
     }
@@ -185,8 +185,13 @@ function DwaveUserChart(props) {
 
 
     return (
-        <div style={{ display: "inline-flex" }}>
+        <div style={{ display: "inline-flex", position: "relative" }}>
             <div style={{ width: 300, height: 400, margin: '0 0 0 0' }}>
+                <div style={{ position: "absolute", margin: '0 0 0 0', top: 240, left: 120 }}>
+                    {"total: " + totalPieChartData.reduce(function add(sum, curr) {
+                        return sum + curr;
+                    }, 0)}
+                </div>
                 <h2>Dwave Cloud Service User</h2>
                 <Doughnut data={pieData} options={pieOptions} />
             </div>
