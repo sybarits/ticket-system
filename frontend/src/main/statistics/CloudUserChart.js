@@ -170,6 +170,7 @@ function CloudUserChart(props) {
                     onChange={(v) => setStartDate(v.target.value)}
                     placeholder="ex) 202205(YYYYMM)"
                     defaultValue={""}
+                    type="number"
                     sx={{ m: 1, width: 260 }}
                 />
                 <TextField
@@ -178,6 +179,7 @@ function CloudUserChart(props) {
                     onChange={(v) => setEndDate(v.target.value)}
                     placeholder="ex) 202210(YYYYMM)"
                     defaultValue={""}
+                    type="number"
                     sx={{ m: 1, width: 260 }}
                 />
             </div>
