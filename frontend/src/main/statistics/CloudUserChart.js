@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import CloudUser from '../cloud_user/CloudUser.js';
-import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -22,9 +18,9 @@ import { Doughnut, Line } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import Var from '../Var.js';
-import DwaveUserChart from "./DwaveUserChart.js";
-import IonQUserChart from "./IonQUserChart.js";
-import IBMQUserChart from "./IBMQUserChart.js";
+import Day from "../util/Day.js";
+import IBMQInstitutionChart from "./IBMQInstitutionChart.js";
+import CloudUserDoughnutLine from "./CloudUserDoughnutLine.js";
 
 
 function CloudUserChart(props) {
@@ -32,9 +28,10 @@ function CloudUserChart(props) {
 
     ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels, Title, CategoryScale, LinearScale, PointElement, LineElement,);
     const [totalPieChartData, setTotalPieChartData] = useState([]);
-    const [today, setToday] = useState([]);
     const [totalLineChartData, setTotalLineChartData] = useState([]);
     const [totalLineChartLabels, setTotalLineChartLabels] = useState([]);
+    const [startDate, setStartDate] = useState(0);
+    const [endDate, setEndDate] = useState(0);
 
     const makeTotalPieChartData = (data) => {
         const cloudServiceList = Var.getCloudServiceTypeList();
@@ -51,9 +48,9 @@ function CloudUserChart(props) {
         const cloudServiceList = Var.getCloudServiceTypeList();
         const result = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
         const len = data.length;
-        const monthLabels = makeMonthLabels();
+        const monthLabels = Day.makeMonthLabels();
         for (let i = 0; i < len; i++) {
-            const index = getMonthIndex(monthLabels, data[i].application_date);
+            const index = Day.getMonthIndex(monthLabels, data[i].application_date);
             if (index != -1) {
                 result[cloudServiceList.indexOf(data[i].cloud_service)][index] += 1;
             }
@@ -61,47 +58,6 @@ function CloudUserChart(props) {
         setTotalLineChartData(result);
         return result;
     }
-
-    const makeMonthLabels = () => {
-        let yearMonth = getThisYearMonth();
-        const monthLabels = [];
-        for (let i = 11; i >= 0; i--) {
-            monthLabels[i] = yearMonth;
-            yearMonth = getPrevMonth(yearMonth);
-        }
-        setTotalLineChartLabels(monthLabels);
-        return monthLabels;//
-    }
-
-    const getPrevMonth = (day) => {//day will be 202207
-        let mon = day.substring(4, 6);
-        let year = day.substring(0, 4);
-        mon = parseInt(mon);
-        year = parseInt(year);
-        return ((mon - 1) == 0) ? String(year - 1) + "12" : String(year) + String(('0' + (mon - 1)).slice(-2));
-    }
-
-    const getMonthIndex = (monthLabels, application_date) => {//application_date will like "2022-06-02T14:59:08.000Z"
-        if (application_date == undefined || application_date == null) return -1;
-        const applicationYearMonth = application_date.substring(0, 4) + application_date.substring(5, 7);
-        return monthLabels.indexOf(applicationYearMonth);
-    }
-
-    const getThisYearMonth = () => {
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = ('0' + (date.getMonth() + 1)).slice(-2);
-        return year + month;//202207
-    }
-
-    const getToday = () => {
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = ('0' + (date.getMonth() + 1)).slice(-2);
-        const day = ('0' + date.getDate()).slice(-2);
-        setToday(year + month + day + '000000');
-        return year + month + day + '000000';
-    };
 
     useEffect(() => {
         axios
@@ -113,16 +69,6 @@ function CloudUserChart(props) {
     }, []);
 
     const pieOptions = {
-        // responsive: false,
-        // scales: {
-        //     yAxes: [
-        //         {
-        //             ticks: {
-        //                 beginAtZero: true,
-        //             },
-        //         },
-        //     ],
-        // },
         plugins: {
             datalabels: {
                 font: {
@@ -133,10 +79,8 @@ function CloudUserChart(props) {
     };
 
     const pieData = {
-        // plugins: [ChartDataLabels],
         labels: Var.getCloudServiceTypeList(),
         datasets: [{
-            // label: 'My First Dataset',
             data: totalPieChartData,
             backgroundColor: [
                 'rgb(0, 64, 178)',
@@ -170,6 +114,7 @@ function CloudUserChart(props) {
             }
         },
     };
+
     const lineData = {
         labels: totalLineChartLabels,
         datasets: [
@@ -215,9 +160,26 @@ function CloudUserChart(props) {
                     <Line data={lineData} options={lineOptions} />
                 </div>
             </div>
-            <DwaveUserChart />
-            <IonQUserChart />
-            <IBMQUserChart />
+            <div>
+                <TextField
+                    id="start_date"
+                    label="Start"
+                    onChange={(v) => setStartDate(v.target.value)}
+                    defaultValue={""}
+                    sx={{ m: 1, width: 260 }}
+                />
+                <TextField
+                    id="end_date"
+                    label="End"
+                    onChange={(v) => setEndDate(v.target.value)}
+                    defaultValue={""}
+                    sx={{ m: 1, width: 260 }}
+                />
+            </div>
+            <CloudUserDoughnutLine cloudService={"IONQ"} start={startDate} end={endDate}/>
+            <CloudUserDoughnutLine cloudService={"DWAVE"} start={startDate} end={endDate}/>
+            <CloudUserDoughnutLine cloudService={"IBMQ"} start={startDate} end={endDate}/>
+            <IBMQInstitutionChart start={startDate} end={endDate} />
         </div>
     );
 }

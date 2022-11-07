@@ -4,6 +4,7 @@ let Var = (function () {
     const user_group = ["INDUSTRY", "RESEARCH", "EDUCATION"];
     const edu_group = ["EMPLOYEE", "GRADUATE", "STUDENT"];
     const inst_list = ["성균관대학교", "고려대학교", "서울대학교", "연세대학교", "POSTECH", "한양대학교", "UNIST", "KAIST"];
+    const lineColor = {"IBMQ":"rgb(0, 64, 178)", "IONQ": "rgb(248, 155, 51)", "DWAVE":"rgb(23, 190, 187)"};
     
     return {
         getServiceUrl() {
@@ -34,6 +35,9 @@ let Var = (function () {
                     return TicketInput;
                 }
             }
+        },
+        getLineColor() {
+            return lineColor;
         }
     }
 

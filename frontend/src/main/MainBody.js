@@ -5,7 +5,6 @@ import Ticket from './ticket/Ticket.js';
 import CloudUsers from './cloud_user/CloudUsers.js';
 import CloudUser from './cloud_user/CloudUser.js';
 import CloudUserInputs from './cloud_user/CloudUserInputs.js';
-import Chart from './statistics/chart.js';
 import NotFound from '../NotFound.js';
 import styled from "styled-components";
 import TicketInputs from './ticket/TicketInputs.js';
@@ -32,7 +31,6 @@ function MainBody() {
                 <Route path="/cloud_users/*" element={<CloudUsers />}></Route>
                 <Route path="/cloud_user/:userId" element={<CloudUser />}></Route>
                 <Route path="/cloud_user_input" element={<CloudUserInputs />}></Route>
-                <Route path="/chart/:chartType" element={<Chart />}></Route>
                 <Route path="*" element={<NotFound />}></Route>
             </Routes>
         </Body>
