@@ -301,12 +301,37 @@ const CloudUserInputs = forwardRef((props, ref) => {
                         onChange={(v) => setPhone(v.target.value)}
                         defaultValue={""}
                     />
-                    <TextField
-                        id="group"
-                        label="Group"
-                        onChange={(v) => setGroup(v.target.value)}
-                        defaultValue={""}
-                    />
+                    <FormControl sx={{ m: 1, minWidth: 200 }}>
+                        <InputLabel id="user-group-select-label">Group</InputLabel>
+                        {cloudService == "IBMQ" &&
+                            <Select
+                                labelId="user-group-select-label"
+                                id="user-group-select"
+                                value={group}
+                                label="Group"
+                                onChange={(v) => setGroup(v.target.value)}
+                            >
+                                <MenuItem value={"EMPLOYEE"}>EMPLOYEE</MenuItem>
+                                <MenuItem value={"GRADUATE"}>GRADUATE</MenuItem>
+                                <MenuItem value={"STUDENT"}>STUDENT</MenuItem>
+
+                            </Select>
+                        }
+                        {cloudService != "IBMQ" &&
+                            <Select
+                                labelId="user-group-select-label"
+                                id="user-group-select"
+                                value={group}
+                                label="Group"
+                                onChange={(v) => setGroup(v.target.value)}
+                            >
+                                <MenuItem value={"INDUSTRY"}>INDUSTRY</MenuItem>
+                                <MenuItem value={"RESEARCH"}>RESEARCH</MenuItem>
+                                <MenuItem value={"EDUCATION"}>EDUCATION</MenuItem>
+
+                            </Select>
+                        }
+                    </FormControl>
                     <TextField
                         id="user_id"
                         label="User ID"
