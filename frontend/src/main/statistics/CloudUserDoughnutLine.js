@@ -30,7 +30,7 @@ function CloudUserDoughnutLine(props) {
     if (props.start.toString().length == 6) {
         start = props.start;
     }
-    if (props.start.toString().length == 6) {
+    if (props.end.toString().length == 6) {
         end = props.end;
     }
 

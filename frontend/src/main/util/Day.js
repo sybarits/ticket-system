@@ -61,8 +61,7 @@ let Day = (function() {
             monthLabels[i] = yearMonth;
             yearMonth = getPrevMonth(yearMonth);
         }
-        // setTotalLineChartLabels(monthLabels);
-        return monthLabels;//
+        return monthLabels;
     }
 
     
@@ -78,8 +77,7 @@ let Day = (function() {
             monthLabels[i] = yearMonth;
             yearMonth = getNextMonth(yearMonth);
         }
-        // setTotalLineChartLabels(monthLabels);
-        return monthLabels;//
+        return monthLabels;
     }
 
 
@@ -88,6 +86,7 @@ let Day = (function() {
         makeStartEndMonthLabels,
         getMonthIndex,
         getMonthLength,
+        getThisYearMonth,
     }
 
 })();

@@ -55,6 +55,7 @@ function CloudUserChart(props) {
                 result[cloudServiceList.indexOf(data[i].cloud_service)][index] += 1;
             }
         }
+        setTotalLineChartLabels(monthLabels);
         setTotalLineChartData(result);
         return result;
     }
@@ -65,6 +66,7 @@ function CloudUserChart(props) {
             .then(({ data }) => {
                 makeTotalPieChartData(data);
                 makeApplicationLineChartData(data);
+                setEndDate(Day.getThisYearMonth());
             });
     }, []);
 
@@ -160,11 +162,13 @@ function CloudUserChart(props) {
                     <Line data={lineData} options={lineOptions} />
                 </div>
             </div>
+            <hr/>
             <div>
                 <TextField
                     id="start_date"
                     label="Start"
                     onChange={(v) => setStartDate(v.target.value)}
+                    placeholder="ex) 202205(YYYYMM)"
                     defaultValue={""}
                     sx={{ m: 1, width: 260 }}
                 />
@@ -172,6 +176,7 @@ function CloudUserChart(props) {
                     id="end_date"
                     label="End"
                     onChange={(v) => setEndDate(v.target.value)}
+                    placeholder="ex) 202210(YYYYMM)"
                     defaultValue={""}
                     sx={{ m: 1, width: 260 }}
                 />
