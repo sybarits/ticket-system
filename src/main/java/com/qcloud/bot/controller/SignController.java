@@ -43,7 +43,7 @@ public class SignController {
         }
         List<String> roleList = Arrays.asList(result.getRoles().split(","));
         signVO.setResult("success");
-        signVO.setToken(jwtTokenProvider.createToken(result.get_id(), roleList));
+        signVO.setToken(jwtTokenProvider.createToken(result.getUsername(), roleList));
         return signVO;
     }
 
