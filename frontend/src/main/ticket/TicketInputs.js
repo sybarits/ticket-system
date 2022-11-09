@@ -6,6 +6,7 @@ import { Box, TextField, Stack, Button, Select, MenuItem, InputLabel, FormContro
 
 import Var from '../Var.js';
 import CloudUserInputs from "../cloud_user/CloudUserInputs.js";
+import AuthInfo from "../auth/AuthInfo.js";
 
 function TicketInputs(props) {
 
@@ -42,7 +43,7 @@ function TicketInputs(props) {
 
     const uploadData = (data) => {
         axios
-            .put(Var.getServiceUrl() + "/ticket", { "ticketList": data })
+            .put(Var.getServiceUrl() + "/ticket", { "ticketList": data }, AuthInfo.getAxiosConfig())
             .then(({ data }) => {
                 resultData(data);
                 setDisable(false);

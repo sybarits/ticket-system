@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Box, TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import * as XLSX from 'xlsx';
 import Var from '../Var.js';
+import AuthInfo from "../auth/AuthInfo.js";
 
 const CloudUserInputs = forwardRef((props, ref) => {
     const context = props.context;
@@ -113,7 +114,7 @@ const CloudUserInputs = forwardRef((props, ref) => {
 
     const uploadData = (data) => {
         axios
-            .put(Var.getServiceUrl() + "/user", { "userList": data })
+            .put(Var.getServiceUrl() + "/user", { "userList": data }, AuthInfo.getAxiosConfig())
             .then(({ data }) => {
                 resultData(data);
                 setDisable(false);

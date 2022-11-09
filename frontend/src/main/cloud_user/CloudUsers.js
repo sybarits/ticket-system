@@ -10,6 +10,7 @@ import styled from "styled-components";
 
 import Var from "../Var.js";
 import CloudUserChart from "../statistics/CloudUserChart.js";
+import AuthInfo from "../auth/AuthInfo.js";
 
 function CloudUsers() {
 
@@ -69,7 +70,7 @@ function CloudUsers() {
             params.api.setRowData(data)
         };
         axios
-            .get(Var.getServiceUrl() + "/user/all")
+            .get(Var.getServiceUrl() + "/user/all", AuthInfo.getAxiosConfig())
             .then(({ data }) => {
                 updateData(data);
                 setUsers(data);

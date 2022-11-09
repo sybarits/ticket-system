@@ -5,6 +5,7 @@ import CloudUser from '../cloud_user/CloudUser.js';
 import { Box, TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 
 import Var from '../Var.js';
+import AuthInfo from "../auth/AuthInfo.js";
 
 function Ticket() {
 
@@ -44,13 +45,13 @@ function Ticket() {
 
     useEffect(() => {
         axios
-            .get(Var.getServiceUrl() + "/ticket/" + params.ticketId)
+            .get(Var.getServiceUrl() + "/ticket/" + params.ticketId, AuthInfo.getAxiosConfig())
             .then(({ data }) => setTicketData(data));
     }, []);
 
     const updateData = (data) => {
         axios
-            .patch(Var.getServiceUrl() + "/ticket", { "ticketList": data })
+            .patch(Var.getServiceUrl() + "/ticket", { "ticketList": data }, AuthInfo.getAxiosConfig())
             .then(({ data }) => {
                 Var.resultData(data);
                 setTicketData(data);

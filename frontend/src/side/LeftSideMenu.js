@@ -26,6 +26,8 @@ const Menu = styled.div`
 
 function LeftSideMenu() {
     const menus = [
+        { name: "login", path: "/signin" },
+        { name: "logout", path: "/signout" },
         { name: "home", path: "/" },
         { name: "tickets", path: "/tickets" },
         { name: "cloud users", path: "/cloud_users" }

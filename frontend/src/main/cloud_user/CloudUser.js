@@ -8,6 +8,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import Var from '../Var.js';
 import Util from "../Util.js";
+import AuthInfo from "../auth/AuthInfo.js";
 
 const CloudUser = forwardRef((props, ref) => {
     const context = props.context;
@@ -100,13 +101,13 @@ const CloudUser = forwardRef((props, ref) => {
             return;
         }
         axios
-            .get(Var.getServiceUrl() + "/user/" + params.userId)
+            .get(Var.getServiceUrl() + "/user/" + params.userId, AuthInfo.getAxiosConfig())
             .then(({ data }) => setUserData(data));
     }, []);
 
     const updateData = async (data) => {
         await axios
-            .patch(Var.getServiceUrl() + "/user", { "userList": data })
+            .patch(Var.getServiceUrl() + "/user", { "userList": data }, AuthInfo.getAxiosConfig())
             .then(({ data }) => {
                 resultData(data);
                 setUserData(data);
@@ -116,7 +117,7 @@ const CloudUser = forwardRef((props, ref) => {
 
     const insertData = (data) => {
         axios
-            .put(Var.getServiceUrl() + "/user", { "userList": data })
+            .put(Var.getServiceUrl() + "/user", { "userList": data }, AuthInfo.getAxiosConfig())
             .then(({ data }) => {
                 resultData(data);
                 setUserData(data);
@@ -126,7 +127,7 @@ const CloudUser = forwardRef((props, ref) => {
 
     const deleteData = (data) => {
         axios
-            .delete(Var.getServiceUrl() + "/user?deleteIdList=" + data)
+            .delete(Var.getServiceUrl() + "/user?deleteIdList=" + data, AuthInfo.getAxiosConfig())
             .then(({ data }) => {
                 resultData(data);
                 refreshPage();
@@ -232,7 +233,7 @@ const CloudUser = forwardRef((props, ref) => {
 
     const uploadFile1 = async (data) => {
         await axios
-            .post(Var.getServiceUrl() + "/file/upload", data, { headers: { "Content-Type": "multipart/form-data" } })
+            .post(Var.getServiceUrl() + "/file/upload", data, { headers: { "Content-Type": "multipart/form-data", "X-AUTH-TOKEN": AuthInfo.getToken() } })
             .then(({ data }) => {
                 setFile1Id(data._id);
                 setFile1Name(data.filename);
@@ -243,7 +244,7 @@ const CloudUser = forwardRef((props, ref) => {
     }
     const uploadFile2 = async (data) => {
         await axios
-            .post(Var.getServiceUrl() + "/file/upload", data, { headers: { "Content-Type": "multipart/form-data" } })
+            .post(Var.getServiceUrl() + "/file/upload", data, { headers: { "Content-Type": "multipart/form-data", "X-AUTH-TOKEN": AuthInfo.getToken() } })
             .then(({ data }) => {
                 setFile2Id(data._id);
                 setFile2Name(data.filename);
@@ -258,7 +259,7 @@ const CloudUser = forwardRef((props, ref) => {
         setFile1Id("");
         setFile1Name("");
         await axios
-            .delete(Var.getServiceUrl() + "/file/" + file_id)
+            .delete(Var.getServiceUrl() + "/file/" + file_id, AuthInfo.getAxiosConfig())
             .then(({ data }) => {
                 resultData(data);
                 setCurFileId({ "num": 1, "id": file_id });
@@ -271,7 +272,7 @@ const CloudUser = forwardRef((props, ref) => {
         setFile2Id("");
         setFile2Name("");
         await axios
-            .delete(Var.getServiceUrl() + "/file/" + file_id)
+            .delete(Var.getServiceUrl() + "/file/" + file_id, AuthInfo.getAxiosConfig())
             .then(({ data }) => {
                 resultData(data);
                 setCurFileId({ "num": 2, "id": file_id });
@@ -282,7 +283,7 @@ const CloudUser = forwardRef((props, ref) => {
 
     const downLoadFile = (file_id) => {
         axios
-            .get(Var.getServiceUrl() + "/file/download/" + file_id)
+            .get(Var.getServiceUrl() + "/file/download/" + file_id, AuthInfo.getAxiosConfig())
             .then(({ data }) => {
                 Util.fileDownload(data);
             });
