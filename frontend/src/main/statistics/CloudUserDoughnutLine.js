@@ -17,6 +17,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import Var from '../Var.js';
 import Day from "../util/Day.js";
+import AuthInfo from "../auth/AuthInfo.js";
 
 
 function CloudUserDoughnutLine(props) {
@@ -80,7 +81,7 @@ function CloudUserDoughnutLine(props) {
     useEffect(() => {
         
         axios
-            .get(Var.getServiceUrl() + "/user/all")
+            .get(Var.getServiceUrl() + "/user/all", AuthInfo.getAxiosConfig())
             .then(({ data }) => {
                 makeDwavePieChartData(data);
                 makeLineChartData(data);
@@ -98,7 +99,7 @@ function CloudUserDoughnutLine(props) {
     };
 
     const pieData = {
-        labels: Var.getUserGroupList(),
+        labels: (cloudService == "IBMQ" ? Var.getEduGroupList() : Var.getUserGroupList()),
         datasets: [{
             data: pieChartData,
             backgroundColor: [

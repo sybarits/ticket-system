@@ -16,6 +16,7 @@ import { Doughnut } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import Var from '../Var.js';
+import AuthInfo from "../auth/AuthInfo.js";
 
 
 function IBMQInstitutionChart(props) {
@@ -39,7 +40,7 @@ function IBMQInstitutionChart(props) {
 
     useEffect(() => {
         axios
-            .get(Var.getServiceUrl() + "/user/all")
+            .get(Var.getServiceUrl() + "/user/all", AuthInfo.getAxiosConfig())
             .then(({ data }) => {
                 makeDwaveInstPieChartData(data);
             });

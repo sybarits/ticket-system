@@ -8,14 +8,13 @@ import Button from '@mui/material/Button';
 import axios from 'axios';
 
 import Var from '../Var.js';
+import AuthInfo from "../auth/AuthInfo.js";
 
 
 function Tickets() {
-    const btnClickedHandler = (params, e) => {
-        console.log("e", e);
-        console.log("e.clicked", e.clicked);
-        e.clicked(e.value);
-    }
+    
+    const [tickets, setTickets] = useState([]);
+
     const BtnCellRenderer = (e) => {
         return (
             // <button onClick={(params) => btnClickedHandler(params, e)}>Edit</button>
@@ -27,6 +26,7 @@ function Tickets() {
             </Link>
         )
     }
+    
     const columnDefs = [
         { headerName: 'Status', field: 'status' },
         { headerName: 'Ticket Type', field: 'ticket_type' },
@@ -45,11 +45,6 @@ function Tickets() {
         },
     ]
 
-    const refreshPage = (e) => {
-        window.location.reload(false);
-    }
-
-    const [tickets, setTickets] = useState([]);
     useEffect(() => {
         // axios
         //   .get("http://192.168.137.86:8080/ticket/all")
@@ -59,7 +54,7 @@ function Tickets() {
     const onGridReady = (params) => {
         const updateData = (data) => params.api.setRowData(data);
         axios
-            .get(Var.getServiceUrl() + "/ticket/all")
+            .get(Var.getServiceUrl() + "/ticket/all", AuthInfo.getAxiosConfig())
             .then(({ data }) => updateData(data));
     };
 
@@ -69,7 +64,7 @@ function Tickets() {
             <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }}>
                 {/* <Button variant="outlined">Upload csv</Button> */}
                 <Button variant="outlined" href="/ticket_input">Add Ticket</Button>
-                <Button variant="outlined" onClick={refreshPage}>Refresh</Button>
+                <Button variant="outlined" onClick={Var.refreshPage}>Refresh</Button>
             </Stack>
             <div className="ag-theme-alpine" style={{ width: '100%', height: 500, margin: '0 0 0 0' }}>
                 <AgGridReact

@@ -21,6 +21,7 @@ import Var from '../Var.js';
 import Day from "../util/Day.js";
 import IBMQInstitutionChart from "./IBMQInstitutionChart.js";
 import CloudUserDoughnutLine from "./CloudUserDoughnutLine.js";
+import AuthInfo from "../auth/AuthInfo.js";
 
 
 function CloudUserChart(props) {
@@ -62,7 +63,7 @@ function CloudUserChart(props) {
 
     useEffect(() => {
         axios
-            .get(Var.getServiceUrl() + "/user/all")
+            .get(Var.getServiceUrl() + "/user/all", AuthInfo.getAxiosConfig())
             .then(({ data }) => {
                 makeTotalPieChartData(data);
                 makeApplicationLineChartData(data);
