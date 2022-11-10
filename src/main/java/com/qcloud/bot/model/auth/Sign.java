@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class Sign {
-    private String result, message, token;
+    private String result, message, token, roles;
 }

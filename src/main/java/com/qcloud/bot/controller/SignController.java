@@ -44,6 +44,8 @@ public class SignController {
         List<String> roleList = Arrays.asList(result.getRoles().split(","));
         signVO.setResult("success");
         signVO.setToken(jwtTokenProvider.createToken(result.getUsername(), roleList));
+        result.setPassword(null);
+        signVO.setRoles(result.getRoles());
         return signVO;
     }
 
@@ -52,7 +54,7 @@ public class SignController {
     @ResponseBody
     public Sign addUser(HttpServletRequest request, @RequestBody UserAuth signupUser) {
         UserAuth user = signupUser;
-        user.setRoles("ROLE_USER");
+        user.setRoles("ROLE_USER");//spring security automatically add ROLE_ at front of role name!!
         user.setName(user.getUserId());
         user.setPassword(passwordEncoder.encode(signupUser.getPassword()));
         Sign signVO = new Sign();
