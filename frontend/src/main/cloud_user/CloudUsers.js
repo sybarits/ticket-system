@@ -37,9 +37,18 @@ function CloudUsers() {
             headerName: 'Cloud Type', field: 'cloud_service',
             width: 130,
         },
-        { headerName: 'Status', field: 'status' },
-        { headerName: 'Name', field: 'name_ko' },
-        { headerName: 'Name', field: 'name_us' },
+        {
+            headerName: 'Status', field: 'status',
+            width: 130
+        },
+        {
+            headerName: 'Name', field: 'name_ko',
+            width: 130,
+        },
+        {
+            headerName: 'Name', field: 'name_us',
+            width: 130
+        },
         { headerName: 'Email', field: 'email', flex: 2 },
         { headerName: 'Application Date', field: 'application_date' },
         { headerName: 'Create Date', field: 'create_date' },
