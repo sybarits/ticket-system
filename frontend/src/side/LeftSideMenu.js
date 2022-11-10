@@ -1,6 +1,11 @@
 import logo from './ionqLogo.png';
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
+import { Stack, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+
+import AuthInfo from '../main/auth/AuthInfo';
+import Var from '../main/Var';
 
 const Side = styled.div`
   display: flex;
@@ -24,19 +29,37 @@ const Menu = styled.div`
   flex-direction: column;
 `
 
+
 function LeftSideMenu() {
     const menus = [
-        { name: "login", path: "/signin" },
-        { name: "logout", path: "/signout" },
         { name: "home", path: "/" },
         { name: "tickets", path: "/tickets" },
         { name: "cloud users", path: "/cloud_users" }
     ];
+
+    const nevigate = useNavigate();
+    
+    const handleLogin = () => {
+        nevigate('/signin');
+    }
+    
+    const handleLogout = () => {
+        AuthInfo.setID("");
+        AuthInfo.setRole("");
+        AuthInfo.setToken("");
+        alert("Logout Success!");
+        nevigate('/signin');
+    }
+
     return (
         <Side>
             <Link to={"/"} key={"logo"} >
                 <Logo src={logo}></Logo>
             </Link>
+            <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }} >
+                {(AuthInfo.getToken() == null || AuthInfo.getToken() === "") && <Button variant="outlined" onClick={handleLogin}>Login</Button>}
+                {(AuthInfo.getToken() != null && AuthInfo.getToken() != "") && <Button variant="outlined" onClick={handleLogout}>Logout</Button>}
+            </Stack>
             <Menu>
                 {menus.map((menu, index) => {
                     return (

@@ -1,7 +1,7 @@
-import React, { useState, useRef } from "react";
-import { useParams, redirect } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Box, TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { Box, TextField, Stack, Button } from '@mui/material';
 import AuthInfo from "./AuthInfo.js";
 
 import Var from '../Var.js';
@@ -9,6 +9,7 @@ import Var from '../Var.js';
 function SignIn() {
     const [userId, setUserId] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
     const handleLogin = () => {
         const postData = {
@@ -19,12 +20,25 @@ function SignIn() {
         axios
             .post(Var.getServiceUrl() + "/signin", postData)
             .then(({ data }) => {
-                AuthInfo.setID(userId);
-                AuthInfo.setRole("USER");
-                AuthInfo.setToken(data.token);
-                alert("Login Success!");
-                redirect("/home");
+                console.log("signin data", data);
+                if (data.result == 'success') {
+                    AuthInfo.setID(userId);
+                    AuthInfo.setRole("USER");
+                    AuthInfo.setToken(data.token);
+                    alert("Login Success!");
+                    navigate("/");
+                } else {
+                    alert("Login Fail!");
+                    Var.refreshPage();
+                }
             });
+    }
+
+    const handlePasswordOnKeyUp = (e) => {
+        if (e.keyCode == 13) {
+            handleLogin();
+        }
+
     }
 
     return (
@@ -42,7 +56,7 @@ function SignIn() {
                         id="userId"
                         label="User ID"
                         onChange={(v) => setUserId(v.target.value)}
-                        sx={{ width: 460 }}
+                        sx={{ width: 360 }}
                     />
                 </div>
                 <div>
@@ -50,7 +64,8 @@ function SignIn() {
                         id="password"
                         label="Password"
                         onChange={(v) => setPassword(v.target.value)}
-                        sx={{ width: 460 }}
+                        onKeyUp={handlePasswordOnKeyUp}
+                        sx={{ width: 360 }}
                     />
                 </div>
             </Box>
