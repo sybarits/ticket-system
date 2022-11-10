@@ -10,7 +10,6 @@ import styled from "styled-components";
 import TicketInputs from './ticket/TicketInputs.js';
 import AuthRoute from './auth/AuthRoute.js';
 import SignIn from './auth/SignIn.js';
-import SignOut from './auth/Signout.js';
 
 const Body = styled.div`
   display: flex;
@@ -29,7 +28,6 @@ function MainBody() {
             <Routes>
                 <Route path="/" element={<Home />}></Route>
                 <Route path="/signin" element={<SignIn />}></Route>
-                <Route path="/signout" element={<SignOut />}></Route>
                 {/* <Route path="/signup" element={<SignUp />}></Route> */}
                 <Route path="/ticket/:ticketId" element={<AuthRoute component={<Ticket />} />}></Route>
                 <Route path="/tickets/*" element={<AuthRoute component={<Tickets />} />}></Route>
