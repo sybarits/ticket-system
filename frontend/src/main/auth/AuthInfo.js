@@ -2,33 +2,33 @@ let AuthInfo = (function() {
     let token, ID, role, axiosConfig;
 
     const setToken = (t) => {
-        token = t;
+        sessionStorage.setItem("token", t);
     }
 
     const getToken = () => {
-        return token;
+        return sessionStorage.getItem("token");
     }
 
     const setID = (i) => {
-        ID = i;
+        sessionStorage.setItem("userId", i);
     }
 
     const getID = () => {
-        return ID;
+        return sessionStorage.getItem("userId");
     }
 
     const setRole = (r) => {
-        role = r;
+        sessionStorage.setItem("role",r);
     }
 
     const getRole = () => {
-        return role;
+        return sessionStorage.getItem("role");
     }
 
     const getAxiosConfig = () => {
         return {
             headers: {
-                "X-AUTH-TOKEN": token
+                "X-AUTH-TOKEN": sessionStorage.getItem("token")
             }
         }
     }
