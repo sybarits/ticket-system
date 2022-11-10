@@ -34,7 +34,8 @@ function LeftSideMenu() {
     const menus = [
         { name: "home", path: "/" },
         { name: "tickets", path: "/tickets" },
-        { name: "cloud users", path: "/cloud_users" }
+        { name: "cloud users", path: "/cloud_users" },
+        { name: "new researcher", path: "/new_researcher" },
     ];
 
     const nevigate = useNavigate();

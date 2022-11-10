@@ -3,10 +3,10 @@ import AuthInfo from "./AuthInfo";
 
 
 function AuthRoute({ component: Component, ...rest }) {
-    console.log("AuthRoute ID", AuthInfo.getID());
-    console.log("AuthRoute token", AuthInfo.getToken());
+    console.log("AuthInfo Role ", AuthInfo.getRole())
+    console.log("AuthRoute Component ",Component.type.name);
     return (
-        (AuthInfo.getRole() === "USER") ? (
+        (AuthInfo.getRole() === "ROLE_USER") ? (
             Component
         ) : (
             <Navigate to='/signin' {...alert("접근할 수 없는 페이지")} />

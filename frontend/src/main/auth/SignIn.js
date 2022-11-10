@@ -20,10 +20,11 @@ function SignIn() {
         axios
             .post(Var.getServiceUrl() + "/signin", postData)
             .then(({ data }) => {
-                console.log("signin data", data);
                 if (data.result == 'success') {
+                    console.log("auth info",data);
+                    console.log("auth info",data.roles);
                     AuthInfo.setID(userId);
-                    AuthInfo.setRole("USER");
+                    AuthInfo.setRole(data.roles);
                     AuthInfo.setToken(data.token);
                     alert("Login Success!");
                     navigate("/");

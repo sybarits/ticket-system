@@ -13,6 +13,11 @@ spring:
       password: "password"
       database: "db name"
       # uri: mongodb: //127.0.0.1:27017/cloud
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 16MB
+      max-request-size: 16MB
 ```
 
 * add OAUTH2.0 token where src/main.resources/client_secret_@@@@@.json
