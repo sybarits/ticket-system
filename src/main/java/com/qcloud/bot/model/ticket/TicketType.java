@@ -4,4 +4,6 @@ public enum TicketType {
     USER,
     FORM,
     LECTURE,
+    NEWRESEARCHER,
+    
 }

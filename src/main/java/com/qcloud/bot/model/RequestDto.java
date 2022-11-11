@@ -2,6 +2,8 @@ package com.qcloud.bot.model;
 
 import java.util.List;
 
+import com.qcloud.bot.model.newresearcher.NewResearcher;
+import com.qcloud.bot.model.newresearcher.TrainingHistory;
 import com.qcloud.bot.model.ticket.TicketDto;
 import com.qcloud.bot.model.user.UserDto;
 
@@ -13,5 +15,7 @@ public class RequestDto {
     private List<TicketDto> ticketList;
     private UserDto user;
     private List<UserDto> userList;
+    private List<NewResearcher> newResearcherList;
     private String query_string;
+    public List<TrainingHistory> trainingHistoryList;
 }
