@@ -35,7 +35,7 @@ function LeftSideMenu() {
         { name: "home", path: "/" },
         { name: "tickets", path: "/tickets" },
         { name: "cloud users", path: "/cloud_users" },
-        { name: "new researcher", path: "/new_researcher" },
+        { name: "new researcher", path: "/new_researcher_table" },
     ];
 
     const nevigate = useNavigate();

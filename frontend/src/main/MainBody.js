@@ -10,6 +10,9 @@ import styled from "styled-components";
 import TicketInputs from './ticket/TicketInputs.js';
 import AuthRoute from './auth/AuthRoute.js';
 import SignIn from './auth/SignIn.js';
+import NewResearchersTable from './new_researcher/NewResearchersTable.js';
+import NewResearcher from './new_researcher/NewResearcher.js';
+import NewResearcherInputs from './new_researcher/NewResearcherInputs.js';
 
 const Body = styled.div`
   display: flex;
@@ -35,6 +38,9 @@ function MainBody() {
                 <Route path="/cloud_users/*" element={<AuthRoute component={<CloudUsers />} />}></Route>
                 <Route path="/cloud_user/:userId" element={<AuthRoute component={<CloudUser />} />}></Route>
                 <Route path="/cloud_user_input" element={<AuthRoute component={<CloudUserInputs />} />}></Route>
+                <Route path="/new_researcher_table/*" element={<AuthRoute component={<NewResearchersTable />} />}></Route>
+                <Route path="/new_researcher/:userId" element={<AuthRoute component={<NewResearcher />} />}></Route>
+                <Route path="/new_researcher_input" element={<AuthRoute component={<NewResearcherInputs />} />}></Route>
                 <Route path="*" element={<NotFound />}></Route>
             </Routes>
         </Body>
