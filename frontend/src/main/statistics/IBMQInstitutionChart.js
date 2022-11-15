@@ -40,7 +40,7 @@ function IBMQInstitutionChart(props) {
 
     useEffect(() => {
         axios
-            .get(Var.getServiceUrl() + "/user/all", AuthInfo.getAxiosConfig())
+            .get(Var.getServiceUrl() + "/openstatistics/users", AuthInfo.getAxiosConfig())
             .then(({ data }) => {
                 makeDwaveInstPieChartData(data);
             });

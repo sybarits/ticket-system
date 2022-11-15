@@ -1,10 +1,10 @@
-import CloudUserChart from "./statistics/CloudUserChart";
+import StatisticsTotal from "./statistics/StatisticsTotal";
 
 function Home() {
 
     return (
         <div>
-            <CloudUserChart />
+            <StatisticsTotal />
         </div>
     );
 }

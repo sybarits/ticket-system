@@ -326,7 +326,7 @@ function NewResearcherStatistics() {
 
     useEffect(() => {
         axios
-            .get(Var.getServiceUrl() + "/newresearcher/all", AuthInfo.getAxiosConfig())
+            .get(Var.getServiceUrl() + "/openstatistics/newresearchers", AuthInfo.getAxiosConfig())
             .then(({ data }) => {
                 setResearcher(data);
                 makeStackBarChartData(data);
@@ -341,17 +341,11 @@ function NewResearcherStatistics() {
         <div style={{ position: "relative" }}>
             <div style={{ width: 1000, height: 300, margin: '0 0 0 0' }}>
                 <h2>신진 연구원 지원자 현황</h2>
-                {/* <div style={{float: "right" }}>total: {lineChartData.reduce(function add(sum, curr) {
-                        return sum + curr;
-                    }, 0)}</div> */}
                 <Line data={lineData} options={lineOptions} />
             </div>
             <div style={{ width: 80, height: 80, margin: '0 0 0 0' }}></div>
             <div style={{ width: 1000, height: 300, margin: '0 0 0 0' }}>
                 <h2>신진연구원 상태</h2>
-                {/* <div style={{float: "right" }}>total: {lineChartData.reduce(function add(sum, curr) {
-                        return sum + curr;
-                    }, 0)}</div> */}
                 <Bar data={barData} options={barOptions} />
             </div>
             <div style={{ width: 80, height: 80, margin: '0 0 0 0' }}></div>
