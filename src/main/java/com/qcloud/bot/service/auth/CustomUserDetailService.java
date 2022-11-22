@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.qcloud.bot.model.auth.AuthPage;
 import com.qcloud.bot.model.auth.UserAuth;
 
 import reactor.core.publisher.Flux;
@@ -55,6 +56,17 @@ public class CustomUserDetailService implements UserDetailsService {
                 )),
                 UserAuth.class);
         return result.collectList().block();
+    }
+
+    public AuthPage getAuthPage() {
+        Mono<AuthPage> result = mongoTemplate.findOne(
+                new Query(),
+                AuthPage.class);
+        return result.block();
+    }
+
+    public AuthPage insertAuthPage(AuthPage authPage) {
+        return mongoTemplate.insert(authPage).block();
     }
     
 }

@@ -2,6 +2,7 @@ package com.qcloud.bot.model;
 
 import java.util.List;
 
+import com.qcloud.bot.model.auth.AuthPage;
 import com.qcloud.bot.model.newresearcher.NewResearcher;
 import com.qcloud.bot.model.newresearcher.TrainingHistory;
 import com.qcloud.bot.model.ticket.TicketDto;
@@ -17,5 +18,6 @@ public class RequestDto {
     private List<UserDto> userList;
     private List<NewResearcher> newResearcherList;
     private String query_string;
-    public List<TrainingHistory> trainingHistoryList;
+    private List<TrainingHistory> trainingHistoryList;
+    private AuthPage authPage;
 }
