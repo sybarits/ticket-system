@@ -44,6 +44,8 @@ const CloudUser = forwardRef((props, ref) => {
     const [fileUploadDialogOpen, setFileUploadDialogOpen] = useState("");
     const [fileDeleteDialogOpen, setFileDeleteDialogOpen] = useState("");
     const [userDeleteDialogOpen, setUserDeleteDialogOpen] = useState("");
+    const [userSaveDialogOpen, setUserSaveDialogOpen] = useState("");
+    const [userChangesSaveDialogOpen, setUserChangesSaveDialogOpen] = useState("");
 
     const [curFileId, setCurFileId] = useState("");
 
@@ -178,19 +180,13 @@ const CloudUser = forwardRef((props, ref) => {
     }))
 
     const handleSaveChanges = (e) => {
-        setDisable(true);
-        const user = makeUser();
-        const list = [];
-        list.push(user);
-        updateData(list);
+        setUserChangesSaveDialogOpen(true);
     }
 
     const handleSaveUser = (e) => {
+        setUserSaveDialogOpen(true);
         setDisable(true);
-        const user = makeUser();
-        const list = [];
-        list.push(user);
-        insertData(list);
+        
     }
 
     const handleCloudSelectChange = (e) => {
@@ -326,6 +322,21 @@ const CloudUser = forwardRef((props, ref) => {
         setDisable(false);
     }
 
+    const handleUserChangesSaveDialogConfirm = () => {
+        const user = makeUser();
+        const list = [];
+        list.push(user);
+        updateData(list);
+        setUserChangesSaveDialogOpen(false);
+    }
+
+    const handleUserSaveDialogConfirm = () => {
+        const user = makeUser();
+        const list = [];
+        list.push(user);
+        insertData(list);
+        setUserSaveDialogOpen(false);
+    }
 
     if (user.length != 0 || context == Var.Context().TicketInputs()) {
         return (
@@ -627,11 +638,11 @@ const CloudUser = forwardRef((props, ref) => {
                     // TransitionComponent={Transition}
                     keepMounted
                     // onClose={handleClose}
-                    aria-describedby="alert-dialog-file-delete-description"
+                    aria-describedby="alert-dialog-user-delete-description"
                 >
                     <DialogTitle>A User will be deleted</DialogTitle>
                     <DialogContent>
-                        <DialogContentText id="alert-dialog-file-delete-description">
+                        <DialogContentText id="alert-dialog-user-delete-description">
                             A user will be deleted.
                             If you click confirm button, the user is going to be deleted.
                         </DialogContentText>
@@ -639,6 +650,40 @@ const CloudUser = forwardRef((props, ref) => {
                     <DialogActions>
                         <Button onClick={handleUserDeleteDialogConfirm}>Confirm</Button>
                         <Button onClick={handleUserDeleteDialogDiscard}>Discard</Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog
+                    open={userChangesSaveDialogOpen}
+                    // TransitionComponent={Transition}
+                    keepMounted
+                    // onClose={handleClose}
+                    aria-describedby="alert-dialog-user-changes-save-description"
+                >
+                    <DialogTitle>User changes are saved.</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-user-changes-save-description">
+                            A user will be saved.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleUserChangesSaveDialogConfirm}>Confirm</Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog
+                    open={userSaveDialogOpen}
+                    // TransitionComponent={Transition}
+                    keepMounted
+                    // onClose={handleClose}
+                    aria-describedby="alert-dialog-user-save-description"
+                >
+                    <DialogTitle>A user will be saved.</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-user-save-description">
+                            A user will be saved.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleUserSaveDialogConfirm}>Confirm</Button>
                     </DialogActions>
                 </Dialog>
             </div>

@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import CloudUser from '../cloud_user/CloudUser.js';
 import { Box, TextField, Stack, Button, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
 import Var from '../Var.js';
 import AuthInfo from "../auth/AuthInfo.js";
@@ -22,6 +23,7 @@ function Ticket() {
     const [userId, setUserId] = useState("");
     const [user, setUser] = useState("");
     const [ticket, setTicket] = useState({});
+    const [ticketChangesSaveDialogOpen, setTicketChangesSaveDialogOpen] = useState("");
 
     const cloudUserRef = useRef();
 
@@ -94,10 +96,7 @@ function Ticket() {
 
     const handleSaveChanges = (e) => {
         setDisable(true);
-        const ticket = makeTicket();
-        const list = [];
-        list.push(ticket);
-        updateData(list);
+        setTicketChangesSaveDialogOpen(true);
     }
 
     const handleSaveObjectChange = (e) => {
@@ -110,6 +109,14 @@ function Ticket() {
 
     const handleStatusSelectChange = (e) => {
         setStatus(e.target.value);
+    }
+
+    const handleTicketChangesSaveDialogConfirm = () => {
+        const ticket = makeTicket();
+        const list = [];
+        list.push(ticket);
+        updateData(list);
+        setTicketChangesSaveDialogOpen(false);
     }
 
     return (
@@ -208,6 +215,23 @@ function Ticket() {
             </Box>
             <hr />
             {ticketType == "USER" && <CloudUser context={Var.Context().TicketInputs()} ref={cloudUserRef} user={[user]} handleSaveChanges={handleSaveChanges} />}
+            <Dialog
+                    open={ticketChangesSaveDialogOpen}
+                    // TransitionComponent={Transition}
+                    keepMounted
+                    // onClose={handleClose}
+                    aria-describedby="alert-dialog-ticket-changes-save-description"
+                >
+                    <DialogTitle>Ticket changes are saved.</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-ticket-changes-save-description">
+                            A ticket will be saved.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleTicketChangesSaveDialogConfirm}>Confirm</Button>
+                    </DialogActions>
+                </Dialog>
         </div>
     );
 
