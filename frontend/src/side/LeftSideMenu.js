@@ -49,9 +49,6 @@ function LeftSideMenu() {
         AuthInfo.setID("");
         AuthInfo.setRole("");
         AuthInfo.setToken("");
-        AuthInfo.setAdminComponents("");
-        AuthInfo.setCloudServiceComponents("");
-        AuthInfo.setNewResearcherComponents("");
         alert("Logout Success!");
         nevigate('/signin');
     }

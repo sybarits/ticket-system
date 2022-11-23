@@ -21,8 +21,6 @@ function SignIn() {
             .post(Var.getServiceUrl() + "/signin", postData)
             .then(({ data }) => {
                 if (data.result == 'success') {
-                    console.log("auth info",data);
-                    console.log("auth info",data.roles);
                     AuthInfo.setID(userId);
                     AuthInfo.setRole(data.roles);
                     AuthInfo.setToken(data.token);
