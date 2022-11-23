@@ -4,6 +4,11 @@ import Var from "../Var";
 
 let AuthInfo = (function() {
 
+    // Kind of role 
+    //     "ADMIN",
+    //     "CLOUD",
+    //     "NEWRESEARCHER",
+
     const setToken = (t) => {
         sessionStorage.setItem("token", t);
     }
@@ -67,9 +72,9 @@ let AuthInfo = (function() {
         let role_str = role.substr(5);
         if (role_str == "ADMIN" &&  getAdminComponents().includes(component)) {
             return true;
-        } else if (role_str == "USER" &&  getCloudServiceComponents().includes(component)) {
+        } else if (role_str == "CLOUD" &&  getCloudServiceComponents().includes(component)) {
             return true;
-        } else if (role_str == "USER" && getNewResearcherComponents().includes(component)) {
+        } else if (role_str == "NEWRESEARCHER" && getNewResearcherComponents().includes(component)) {
             return true;
         }
 

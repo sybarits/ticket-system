@@ -62,6 +62,7 @@ function SignIn() {
                     <TextField
                         id="password"
                         label="Password"
+                        type="password"
                         onChange={(v) => setPassword(v.target.value)}
                         onKeyUp={handlePasswordOnKeyUp}
                         sx={{ width: 360 }}

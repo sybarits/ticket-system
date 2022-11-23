@@ -23,7 +23,7 @@ function AuthRoute({ component: Component, ...rest }) {
         (AuthInfo.checkComponentAuth(AuthInfo.getRole(), getPath(Component.type.name))) ? (
             Component
         ) : (
-            <Navigate to='/signin' {...alert("접근할 수 없는 페이지")} />
+            <Navigate to='/' {...alert("접근할 수 없는 페이지")} />
         )
     );
 }

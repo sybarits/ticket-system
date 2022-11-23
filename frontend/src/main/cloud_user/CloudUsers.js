@@ -6,11 +6,9 @@ import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import axios from 'axios';
-import styled from "styled-components";
 import {utils as XLSXUtils, writeFileXLSX  as writeFileXLSX } from 'xlsx';
 
 import Var from "../Var.js";
-import CloudUserChart from "../statistics/CloudUserChart.js";
 import AuthInfo from "../auth/AuthInfo.js";
 
 function CloudUsers() {
