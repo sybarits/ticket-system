@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import TextField from '@mui/material/TextField';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -18,16 +19,18 @@ import axios from 'axios';
 
 import AuthInfo from "../auth/AuthInfo";
 import Var from "../Var";
+import Day from "../util/Day";
 import Colors from "../util/Colors";
 
 function NewResearcherStatistics() {
     ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels, Title, CategoryScale, LinearScale, PointElement, LineElement, BarElement, Filler,);
 
-    const [researcher, setResearcher] = useState([]);
     const [lineChartData, setLineChartData] = useState([]);
-    const [lineTotalData, setLineTotalData] = useState([]);
     const [lineChartLabels, setLineChartLabels] = useState([]);
     const [barChartDatasets, setBarChartDatasets] = useState([]);
+    const [trainingLineChartData, setTrainingLineChartData] = useState([]);
+    const [trainingFinishLineChartData, setTrainingFinishLineChartData] = useState([]);
+    const [trainingLineChartLabel, setTrainingLineChartLabel] = useState([]);
     const [totalInstPieChartData, setTotalInstPieChartData] = useState([]);
     const [instPieChartLabels, setInstPieChartLabels] = useState([]);
     const [deptPieChartData, setDeptPieChartData] = useState([]);
@@ -37,6 +40,8 @@ function NewResearcherStatistics() {
     const [instDataSum, setInstDataSum] = useState([]);
     const [deptDataSum, setDeptDataSum] = useState([]);
     const [contryDataSum, setContryDataSum] = useState([]);
+    const [start, setStart] = useState([]);
+    const [end, setEnd] = useState(Day.getThisYearMonth());
 
     const lineChartType = ["INTERNSHIP", "PROJECT", "선발"];
     const researcherStatus = ["APPLICATION", "FAIL", "CANCEL", "READY", "TRAINING", "FINISH", "EXTENSION"];
@@ -82,6 +87,40 @@ function NewResearcherStatistics() {
         ],
     }
 
+    const trainingLineData = {
+        labels: trainingLineChartLabel,
+        datasets: [{
+            type: 'line',
+                label: lineChartType[0],
+                data: trainingLineChartData[0],
+                borderColor: Colors.YELLOW,
+                backgroundColor: Colors.YELLOW,
+        },{
+            type: 'line',
+                label: lineChartType[1],
+                data: trainingLineChartData[1],
+                borderColor: Colors.GREEN,
+                backgroundColor: Colors.GREEN,
+        }]
+    }
+
+    const trainingFinishLineData = {
+        labels: trainingLineChartLabel,
+        datasets: [{
+            type: 'line',
+                label: lineChartType[0],
+                data: trainingFinishLineChartData[0],
+                borderColor: Colors.YELLOW,
+                backgroundColor: Colors.YELLOW,
+        },{
+            type: 'line',
+                label: lineChartType[1],
+                data: trainingFinishLineChartData[1],
+                borderColor: Colors.GREEN,
+                backgroundColor: Colors.GREEN,
+        }]
+    }
+
     const barData = {
         labels: lineChartLabels,
         datasets: barChartDatasets,
@@ -96,23 +135,6 @@ function NewResearcherStatistics() {
                 font: {
                     weight: 'bold'
                 },
-                // formatter: (value, ctx) => {
-                //     console.log("ctx", ctx);
-                //     let total = 0;
-                //     let index = ctx.dataIndex;
-                //     lineChartData.map((d,i) => {
-                //         console.log("d",d);
-                //         console.log("i",i);
-                //         if (i === ctx.dataIndex+1) return;
-                //         total += lineChartData[i][ctx.dataIndex];
-                //     })
-                //     return total;
-                // },
-                // display: function (ctx) {
-                //     console.log("ctx",ctx);
-                //     console.log("ctx.chart",ctx.chart);
-                //     return true//ctx.datasetIndex === 4//ctx.chart;//.$totalizer.utmost
-                // },
                 anchor: 'start',
                 align: 'end',
             }
@@ -278,7 +300,49 @@ function NewResearcherStatistics() {
         }
         // console.log("researcherLineChartData", researcherLineChartData); 
         setLineChartData(researcherLineChartData);
-        setLineTotalData(lineData);
+    }
+
+    const makeTrainingFinishLineChartData = (data) => {
+        let monthLength = 12;
+        let monthLabels = [];
+        if (start.toString().length == 6 && end.toString().length == 6) {
+            monthLabels = Day.makeStartEndMonthLabels(start, end);
+            monthLength = Day.getMonthLength(start, end);
+        } else {
+            monthLabels = Day.makeMonthLabels();
+        }
+        const tariningResult = [[],[]];
+        tariningResult[0] = Array.from({length: monthLength}, () => 0);
+        tariningResult[1] = Array.from({length: monthLength}, () => 0);
+        const tariningFinishResult = [[],[]];
+        tariningFinishResult[0] = Array.from({length: monthLength}, () => 0);
+        tariningFinishResult[1] = Array.from({length: monthLength}, () => 0);
+        const dataLength = data.length;
+        for (let i = 0; i < dataLength; i++) {
+            let s = Day.getMonthIndex(monthLabels, data[i].training_start_date);
+            let e = Day.getMonthIndex(monthLabels, data[i].training_end_date);
+            if (s != -1 && e == -1) e = monthLabels.length;
+            if (s == -1 && e != -1) s = 0;
+            if (s == -1 && e == -1) continue;
+            for (let j=s; j<e; j++) {
+                if (data[i].type == "INTERNSHIP") {
+                    tariningResult[lineChartType.indexOf("INTERNSHIP")][j] += 1;
+                } else if (data[i].type == "PROJECT") {
+                    tariningResult[lineChartType.indexOf("PROJECT")][j] += 1;
+                }
+            }
+            if (data[i].type == "INTERNSHIP") {
+                tariningFinishResult[lineChartType.indexOf("INTERNSHIP")][e] += 1;
+            } else if (data[i].type == "PROJECT") {
+                tariningFinishResult[lineChartType.indexOf("PROJECT")][e] += 1;
+            }
+        }
+                
+        setTrainingLineChartLabel(monthLabels);
+        setTrainingLineChartData(tariningResult);
+        setTrainingFinishLineChartData(tariningFinishResult);
+        
+        console.log("training chart data", data);
     }
 
     const makePieChartData = (data) => {
@@ -328,12 +392,12 @@ function NewResearcherStatistics() {
         axios
             .get(Var.getServiceUrl() + "/openstatistics/newresearchers", AuthInfo.getAxiosConfig())
             .then(({ data }) => {
-                setResearcher(data);
                 makeStackBarChartData(data);
                 makeLineChartData(data);
                 makePieChartData(data);
+                makeTrainingFinishLineChartData(data);
             });
-    }, []);
+    }, [start, end]);
 
 
 
@@ -343,17 +407,48 @@ function NewResearcherStatistics() {
                 <h2>신진 연구원 지원자 현황</h2>
                 <Line data={lineData} options={lineOptions} />
             </div>
-            <div style={{ width: 80, height: 80, margin: '0 0 0 0' }}></div>
+            <div style={{ width: 80, height: 80 }}></div>
             <div style={{ width: 1000, height: 300, margin: '0 0 0 0' }}>
                 <h2>신진연구원 상태</h2>
                 <Bar data={barData} options={barOptions} />
             </div>
-            <div style={{ width: 80, height: 80, margin: '0 0 0 0' }}></div>
+            <div style={{ width: 80, height: 80}}></div>
+            <div>
+                <TextField
+                    id="start_date"
+                    label="Start"
+                    onChange={(v) => setStart(v.target.value)}
+                    placeholder="ex) 202205(YYYYMM)"
+                    defaultValue={""}
+                    type="number"
+                    sx={{ m: 1, width: 260 }}
+                />
+                <TextField
+                    id="end_date"
+                    label="End"
+                    onChange={(v) => setEnd(v.target.value)}
+                    placeholder="ex) 202210(YYYYMM)"
+                    defaultValue={""}
+                    type="number"
+                    sx={{ m: 1, width: 260 }}
+                />
+            </div>
+            
+            <div style={{ width: 1000, height: 300, margin: '0 0 0 0' }}>
+                <h2>신진연구원 연수중</h2>
+                <Line data={trainingLineData} options={lineOptions} />
+            </div>
+            <div style={{ width: 80, height: 80}}></div>
+            <div style={{ width: 1000, height: 300, margin: '0 0 0 0' }}>
+                <h2>신진연구원 연수종료</h2>
+                <Line data={trainingFinishLineData} options={lineOptions} />
+            </div>
+            <div style={{ width: 80, height: 80 }}></div>
             <div style={{ display: "inline-flex", position: "relative" }}>
                 <div style={{ position: "absolute", margin: '0 0 0 0', top: 340, left: 220 }}>
                     {"total: " + instDataSum}
                 </div>
-                <div style={{ width: 500, height: 600, margin: '0 0 0 0' }}>
+                <div style={{ width: 500, height: 600 }}>
                     <h2>소속 기관별 연구자 현황</h2>
                     <Doughnut data={instPieData} options={pieOptions} />
                 </div>
