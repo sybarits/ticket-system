@@ -7,6 +7,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 import styled from "styled-components";
+import {utils as XLSXUtils, writeFileXLSX  as writeFileXLSX } from 'xlsx';
 
 import Var from "../Var.js";
 import CloudUserChart from "../statistics/CloudUserChart.js";
@@ -16,6 +17,7 @@ function CloudUsers() {
 
     const [users, setUsers] = useState([]);
     const [rowCount, setRowCount] = useState(0);
+    const [filteredData, setFilteredData] = useState([]);
 
     const BtnCellRenderer = (e) => {
         return (
@@ -84,12 +86,29 @@ function CloudUsers() {
                 updateData(data);
                 setUsers(data);
                 setRowCount(data.length);
+                setFilteredData(data);
             });
     };
+
+    const saveJsonAsExelFile = (j) => {
+        const ws = XLSXUtils.json_to_sheet(j);
+        const wb = XLSXUtils.book_new();
+        XLSXUtils.book_append_sheet(wb, ws, "Sheet1");
+        writeFileXLSX(wb, "data.xlsx");
+    }
+
+    const hendleSaveAsExelButton = () => {
+        saveJsonAsExelFile(filteredData);
+    }
 
 
     const onFilterChanged = (e) => {
         setRowCount(e.api.getModel().rowsToDisplay.length);
+        let data = []
+        e.api.forEachNodeAfterFilter(node => {
+            data.push(node.data);
+        });
+        setFilteredData(data);
     }
 
     return (
@@ -98,8 +117,9 @@ function CloudUsers() {
             {/* <CloudUserChart /> */}
             <h2>Cloud User Table</h2>
             <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }}>
-                <Button variant="outlined" href="/cloud_user_input">Add User</Button>
                 <Button variant="outlined" onClick={refreshPage}>Refresh</Button>
+                <Button variant="outlined" href="/cloud_user_input">Add User</Button>
+                <Button variant="outlined" onClick={hendleSaveAsExelButton}>Save As Exel</Button>
             </Stack>
             <div align="left" >Total: {rowCount}</div>
             <div className="ag-theme-alpine" style={{ width: '100%', height: 800, margin: '0 0 0 0' }}>

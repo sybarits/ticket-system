@@ -6,7 +6,7 @@ import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import axios from 'axios';
-import styled from "styled-components";
+import {utils as XLSXUtils, writeFileXLSX  as writeFileXLSX } from 'xlsx';
 
 import Var from "../Var.js";
 import AuthInfo from "../auth/AuthInfo.js";
@@ -15,6 +15,7 @@ function NewResearchersTable() {
 
     const [researcher, setResearcher] = useState([]);
     const [rowCount, setRowCount] = useState(0);
+    const [filteredData, setFilteredData] = useState([]);
 
     const BtnCellRenderer = (e) => {
         return (
@@ -103,12 +104,28 @@ function NewResearchersTable() {
                 updateData(data);
                 setResearcher(data);
                 setRowCount(data.length);
+                setFilteredData(data);
             });
     };
 
+    const saveJsonAsExelFile = (j) => {
+        const ws = XLSXUtils.json_to_sheet(j);
+        const wb = XLSXUtils.book_new();
+        XLSXUtils.book_append_sheet(wb, ws, "Sheet1");
+        writeFileXLSX(wb, "data.xlsx");
+    }
+
+    const hendleSaveAsExelButton = () => {
+        saveJsonAsExelFile(filteredData);
+    }
 
     const onFilterChanged = (e) => {
         setRowCount(e.api.getModel().rowsToDisplay.length);
+        let data = []
+        e.api.forEachNodeAfterFilter(node => {
+            data.push(node.data);
+        });
+        setFilteredData(data);
     }
 
     return (
@@ -117,8 +134,9 @@ function NewResearchersTable() {
             {/* <CloudUserChart /> */}
             <h2>New Researcher Table</h2>
             <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }}>
-                <Button variant="outlined" href="/new_researcher_input">Add Researcher</Button>
                 <Button variant="outlined" onClick={Var.refreshPage}>Refresh</Button>
+                <Button variant="outlined" href="/new_researcher_input">Add Researcher</Button>
+                <Button variant="outlined" onClick={hendleSaveAsExelButton}>Save As Exel</Button>
             </Stack>
             <div align="left" >Total: {rowCount}</div>
             <div className="ag-theme-alpine" style={{ width: '100%', height: 800, margin: '0 0 0 0' }}>
