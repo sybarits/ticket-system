@@ -624,4 +624,5 @@ const NewResearcher = forwardRef((props, ref) => {
     }
 });
 
+NewResearcher.displayName = "NewResearcher";
 export default NewResearcher;

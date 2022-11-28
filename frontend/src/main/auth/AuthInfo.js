@@ -66,6 +66,9 @@ let AuthInfo = (function() {
     }
 
     const checkComponentAuth = (role, component) => {
+        if (role == undefined || role == null) {
+            return false;
+        }
         if (!role.startsWith("ROLE")) {
             return false;
         }

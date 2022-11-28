@@ -237,4 +237,5 @@ function Ticket() {
 
 }
 
+Ticket.displayName = "Ticket";
 export default Ticket;

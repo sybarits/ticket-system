@@ -4,6 +4,7 @@ import AuthInfo from "./AuthInfo";
 
 
 function AuthRoute({ component: Component, ...rest }) {
+
     const pathMap = {
         "cloud_user_input": "CloudUserInputs",
         "new_researcher_input": "NewResearcherInputs",
@@ -20,7 +21,7 @@ function AuthRoute({ component: Component, ...rest }) {
     }
 
     return (
-        (AuthInfo.checkComponentAuth(AuthInfo.getRole(), getPath(Component.type.name))) ? (
+        (AuthInfo.checkComponentAuth(AuthInfo.getRole(), getPath(Component.type.displayName))) ? (
             Component
         ) : (
             <Navigate to='/' {...alert("접근할 수 없는 페이지")} />
@@ -28,4 +29,5 @@ function AuthRoute({ component: Component, ...rest }) {
     );
 }
 
+AuthRoute.displayName = "AuthRoute";
 export default AuthRoute;

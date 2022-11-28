@@ -152,4 +152,5 @@ function CloudUsers() {
     );
 }
 
+CloudUsers.displayName = "CloudUsers";
 export default CloudUsers;

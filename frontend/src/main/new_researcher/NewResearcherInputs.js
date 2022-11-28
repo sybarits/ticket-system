@@ -456,4 +456,5 @@ const NewResearcherInputs = forwardRef((props, ref) => {
     );
 });
 
+NewResearcherInputs.displayName = "NewResearcherInputs";
 export default NewResearcherInputs;

@@ -175,4 +175,5 @@ function TicketInputs(props) {
     );
 }
 
+TicketInputs.displayName = "TicketInputs";
 export default TicketInputs;

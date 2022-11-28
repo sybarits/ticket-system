@@ -698,4 +698,5 @@ const CloudUser = forwardRef((props, ref) => {
     }
 });
 
+CloudUser.displayName = "CloudUser";
 export default CloudUser;

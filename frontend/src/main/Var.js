@@ -1,5 +1,6 @@
 let Var = (function () {
-    const service_url = "http://192.168.137.86:8080";
+    // const service_url = "http://192.168.137.86:8080";
+    const service_url = "http://115.145.194.16:8080";
     const cloud_service_type = ["IBMQ", "IONQ", "DWAVE"];
     const user_group = ["INDUSTRY", "RESEARCH", "EDUCATION"];
     const edu_group = ["EMPLOYEE", "GRADUATE", "STUDENT"];

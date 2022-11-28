@@ -448,4 +448,5 @@ const CloudUserInputs = forwardRef((props, ref) => {
     );
 });
 
+CloudUserInputs.displayName = "CloudUserInputs";
 export default CloudUserInputs;

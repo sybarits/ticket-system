@@ -341,8 +341,6 @@ function NewResearcherStatistics() {
         setTrainingLineChartLabel(monthLabels);
         setTrainingLineChartData(tariningResult);
         setTrainingFinishLineChartData(tariningFinishResult);
-        
-        console.log("training chart data", data);
     }
 
     const makePieChartData = (data) => {
@@ -477,4 +475,5 @@ function NewResearcherStatistics() {
 
 }
 
+NewResearcherStatistics.displayName = "NewResearcherStatistics";
 export default NewResearcherStatistics;

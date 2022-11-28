@@ -12,7 +12,7 @@ import Var from "../Var.js";
 import AuthInfo from "../auth/AuthInfo.js";
 
 function NewResearchersTable() {
-
+    
     const [researcher, setResearcher] = useState([]);
     const [rowCount, setRowCount] = useState(0);
     const [filteredData, setFilteredData] = useState([]);
@@ -171,4 +171,5 @@ function NewResearchersTable() {
     );
 }
 
+NewResearchersTable.displayName = "NewResearchersTable";
 export default NewResearchersTable;
