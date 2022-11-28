@@ -6,7 +6,8 @@
 spring:
   data:
     mongodb:
-      host: 127.0.0.1
+      #host: 127.0.0.1
+      host: 192.168.0.2
       port: 27017
       authentication-database: admin
       username: "name"
@@ -21,3 +22,13 @@ spring:
 ```
 
 * add OAUTH2.0 token where src/main.resources/client_secret_@@@@@.json
+
+
+* insert data bellow for auth
+```javascript
+db.authPages.insert({
+    "administrator":["CloudUsers", "CloudUser", "CloudUserInputs", "Tickets", "Ticket", "TicketInputs", "NewResearchersTable", "NewResearcher", "NewResearcherInputs", "Tickets", "Ticket", "TicketInputs"],
+    "cloudSerivce":["CloudUsers", "CloudUser", "CloudUserInputs", "Tickets", "Ticket", "TicketInputs"],
+    "newResearcher":["NewResearchersTable", "NewResearcher", "NewResearcherInputs", "Tickets", "Ticket", "TicketInputs"],
+})
+```
