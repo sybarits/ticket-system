@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AgGridReact, AgGridColumn } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
@@ -16,6 +16,7 @@ function NewResearchersTable() {
     const [researcher, setResearcher] = useState([]);
     const [rowCount, setRowCount] = useState(0);
     const [filteredData, setFilteredData] = useState([]);
+    const nevigate = useNavigate();
 
     const BtnCellRenderer = (e) => {
         return (
@@ -119,6 +120,10 @@ function NewResearchersTable() {
         saveJsonAsExelFile(filteredData);
     }
 
+    const hendleAddNewResearcherButton = () => {
+        nevigate('/new_researcher_input');
+    }
+
     const onFilterChanged = (e) => {
         setRowCount(e.api.getModel().rowsToDisplay.length);
         let data = []
@@ -135,7 +140,7 @@ function NewResearchersTable() {
             <h2>New Researcher Table</h2>
             <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }}>
                 <Button variant="outlined" onClick={Var.refreshPage}>Refresh</Button>
-                <Button variant="outlined" href="/new_researcher_input">Add Researcher</Button>
+                <Button variant="outlined" onClick={hendleAddNewResearcherButton}>Add Researcher</Button>
                 <Button variant="outlined" onClick={hendleSaveAsExelButton}>Save As Exel</Button>
             </Stack>
             <div align="left" >Total: {rowCount}</div>

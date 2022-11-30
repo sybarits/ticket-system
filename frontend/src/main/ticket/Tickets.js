@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AgGridReact, AgGridColumn } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
@@ -14,6 +14,7 @@ import AuthInfo from "../auth/AuthInfo.js";
 function Tickets() {
     
     const [tickets, setTickets] = useState([]);
+    const nevigate = useNavigate();
 
     const BtnCellRenderer = (e) => {
         return (
@@ -58,12 +59,16 @@ function Tickets() {
             .then(({ data }) => updateData(data));
     };
 
+    const hendleAddTicketButton = () => {
+        nevigate('/ticket_input');
+    }
+
     return (
         <div style={{ width: '100%', height: 600, margin: '0 0 0 0' }}>
             <h2>Tickets</h2>
             <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }}>
                 {/* <Button variant="outlined">Upload csv</Button> */}
-                <Button variant="outlined" href="/ticket_input">Add Ticket</Button>
+                <Button variant="outlined" onClick={hendleAddTicketButton}>Add Ticket</Button>
                 <Button variant="outlined" onClick={Var.refreshPage}>Refresh</Button>
             </Stack>
             <div className="ag-theme-alpine" style={{ width: '100%', height: 500, margin: '0 0 0 0' }}>

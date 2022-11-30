@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AgGridReact, AgGridColumn } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
@@ -16,6 +16,7 @@ function CloudUsers() {
     const [users, setUsers] = useState([]);
     const [rowCount, setRowCount] = useState(0);
     const [filteredData, setFilteredData] = useState([]);
+    const nevigate = useNavigate();
 
     const BtnCellRenderer = (e) => {
         return (
@@ -99,6 +100,10 @@ function CloudUsers() {
         saveJsonAsExelFile(filteredData);
     }
 
+    const hendleAddUserButton = () => {
+        nevigate('/cloud_user_input');
+    }
+
 
     const onFilterChanged = (e) => {
         setRowCount(e.api.getModel().rowsToDisplay.length);
@@ -116,7 +121,7 @@ function CloudUsers() {
             <h2>Cloud User Table</h2>
             <Stack spacing={2} direction="row" justifyContent="end" sx={{ m: 1 }}>
                 <Button variant="outlined" onClick={refreshPage}>Refresh</Button>
-                <Button variant="outlined" href="/cloud_user_input">Add User</Button>
+                <Button variant="outlined" onClick={hendleAddUserButton}>Add User</Button>
                 <Button variant="outlined" onClick={hendleSaveAsExelButton}>Save As Exel</Button>
             </Stack>
             <div align="left" >Total: {rowCount}</div>
