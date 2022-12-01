@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import Var from '../Var.js';
-import Util from "../Util.js";
+import Util from "../util/Util.js";
 import AuthInfo from "../auth/AuthInfo.js";
 
 const CloudUser = forwardRef((props, ref) => {

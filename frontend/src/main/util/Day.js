@@ -80,6 +80,18 @@ let Day = (function() {
         return monthLabels;
     }
 
+    const makeMonthSheetNames = (data) => {
+        const set = new Set();
+        const dataLength = data.length;
+        for (let i=0; i<dataLength; i++) {
+            if (data[i]["승인일자"] == undefined || data[i]["승인일자"] == null || data[i]["승인일자"] == '') continue;
+            let date = data[i]["승인일자"].toISOString();
+            let YearMonth = date.substring(0, 4) + date.substring(5, 7);
+            set.add(YearMonth);
+        }
+        return Array.from(set);
+    }
+
 
     return {
         makeMonthLabels,
@@ -87,6 +99,7 @@ let Day = (function() {
         getMonthIndex,
         getMonthLength,
         getThisYearMonth,
+        makeMonthSheetNames,
     }
 
 })();

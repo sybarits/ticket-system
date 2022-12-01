@@ -15,6 +15,7 @@ import NewResearcher from './new_researcher/NewResearcher.js';
 import NewResearcherInputs from './new_researcher/NewResearcherInputs.js';
 import NewResearcherStatistics from './new_researcher/NewResearcherStatistics.js';
 import StatisticsTotal from './statistics/StatisticsTotal.js';
+import SettlementTask from './settlement/SettlementTask.js';
 
 const Body = styled.div`
   display: flex;
@@ -45,6 +46,7 @@ function MainBody() {
                 <Route path="/new_researcher_input" element={<AuthRoute component={<NewResearcherInputs />} />}></Route>
                 <Route path="/new_researcher_statistics" element={<AuthRoute component={<NewResearcherStatistics />} />}></Route>
                 <Route path="/statistics_total" element={<StatisticsTotal />}></Route>
+                <Route path="/settlement_task" element={<SettlementTask />}></Route>
                 <Route path="*" element={<NotFound />}></Route>
             </Routes>
         </Body>

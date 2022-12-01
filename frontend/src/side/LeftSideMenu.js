@@ -37,6 +37,7 @@ function LeftSideMenu() {
         { name: "cloud users", path: "/cloud_users" },
         { name: "new researcher", path: "/new_researcher_table" },
         { name: "statistics", path: "/statistics_total" },
+        { name: "settlement", path: "/settlement_task" },
     ];
 
     const nevigate = useNavigate();
