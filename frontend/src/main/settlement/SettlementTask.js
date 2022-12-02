@@ -1,6 +1,5 @@
-import { useState, useRef } from "react";
-import { useNavigate } from 'react-router-dom';
-import { Box, TextField, Stack, Button, Checkbox, FormControl, FormControlLabel } from '@mui/material';
+import { useState, useRef, useEffect } from "react";
+import { Box, Stack, Button, Checkbox, FormControlLabel } from '@mui/material';
 import { read as XLSXread, utils as XLSXutils, writeFileXLSX } from 'xlsx';
 
 import Day from "../util/Day.js";
@@ -13,7 +12,6 @@ function SettlementTask() {
     const [header, setHeader] = useState([]);
     const [checkedHeader, setCheckedHeader] = useState([]);
     const [multiSheet, setMultiSheet] = useState(false);
-    const navigate = useNavigate();
     const fileInput = useRef(null);
 
     const handleInputChange = (e) => {
@@ -130,6 +128,9 @@ function SettlementTask() {
     const handleMultiSheetCheckboxChange = (e) => {
         setMultiSheet(e.target.checked);
     }
+
+    useEffect(() => {
+    }, [header, rowData]);
 
     return (
         <div style={{ position: "absolute", width: '70%', top: 50, margin: '0 0 0 0' }}>
