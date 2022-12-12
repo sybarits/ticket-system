@@ -167,3 +167,25 @@ server {
     }
 }
 ```
+
+
+## Spring Boot Server docker image 만들기
+
+프로젝트 root 위치에서 아래 명령어를 이용해 spring boot 프로젝트를 빌드한다.
+```
+$ ./gradlew build
+```
+
+build/libs 위치에 jar 파일이 생성되었을 것이다. 이 파일이 빌드 결과물이다.
+이 결과물을 docker 위치에 옮기고 이름을 qcenter-server.jar(Dockerfile에서 사용하는 파일 이름) 로 바꾸어 준다. 
+```
+$ cp ./build/libs/*.jar ./docker/qcenter-server.jar
+```
+
+docker 위치에 가면 미리 작성된 Dockerfile이 있다. 이를 이용해 이미지를 만들고, tar 파일로 export 해본다.
+```
+sudo docker build -t qcenter-backend:0.2 .
+sudo docker save -o qcenter-backend.0.2.tar qcenter-backend:0.2
+```
+tar 파일을 배포할 곳에 전송한다.
+
