@@ -33,9 +33,9 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public List<UserDto> usersGet(@RequestBody RequestDto request) {
-        return qCloudUser.getUsers(request);
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public List<UserDto> usersGet(@RequestParam(value = "query_string") String query_string) {
+        return qCloudUser.getUsers(query_string);
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT)

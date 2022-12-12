@@ -35,15 +35,15 @@ public class QCloudUserService implements UserService {
     }
 
     @Override
-    public List<UserDto> getUsers(RequestDto request) {
+    public List<UserDto> getUsers(String query_string) {
         Flux<UserDto> result = mongoTemplate.find(
                 Query.query(new Criteria().orOperator(
-                    Criteria.where("_id").is(request.getQuery_string()),
-                    Criteria.where("status").is(request.getQuery_string()),
-                    Criteria.where("name_ko").is(request.getQuery_string()),
-                    Criteria.where("name_us").is(request.getQuery_string()),
-                    Criteria.where("email").is(request.getQuery_string()),
-                    Criteria.where("cloud_service").is(request.getQuery_string())
+                    Criteria.where("_id").is(query_string),
+                    Criteria.where("status").is(query_string),
+                    Criteria.where("name_ko").is(query_string),
+                    Criteria.where("name_us").is(query_string),
+                    Criteria.where("email").is(query_string),
+                    Criteria.where("cloud_service").is(query_string)
                 )),
                 UserDto.class);
         return result.collectList().block();
