@@ -115,7 +115,8 @@ function CloudUserDoughnutLine(props) {
         plugins: {
             datalabels: {
                 display: function (context) {
-                    return context.dataset.data[context.dataIndex] > 0;
+                    // return context.dataset.data[context.dataIndex] > 0;
+                    return false;
                 },
                 font: {
                     weight: 'bold'
