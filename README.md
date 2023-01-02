@@ -25,6 +25,8 @@ spring:
       enabled: true
       max-file-size: 16MB
       max-request-size: 16MB
+  jwt:
+    secret: # your secret key
 ```
 
 synology 상에 도커를 설치한다.

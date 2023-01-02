@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 public class JwtTokenProvider {
     
-    @Value("spring.jwt.secret")
+    @Value("${spring.jwt.secret}")
     private String secretKey;
 
     private long tokenValidMilisecond = 1000L * 60 * 60 * 8; // 8시간 토큰 유효
