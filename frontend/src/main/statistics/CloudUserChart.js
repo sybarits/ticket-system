@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import TextField from '@mui/material/TextField';
+import {TextField, Checkbox, FormControlLabel} from '@mui/material';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -33,6 +33,7 @@ function CloudUserChart(props) {
     const [totalLineChartLabels, setTotalLineChartLabels] = useState([]);
     const [startDate, setStartDate] = useState(0);
     const [endDate, setEndDate] = useState(0);
+    const [showLabels, setShowLabels] = useState(false);
 
     const makeTotalPieChartData = (data) => {
         const cloudServiceList = Var.getCloudServiceTypeList();
@@ -59,6 +60,10 @@ function CloudUserChart(props) {
         setTotalLineChartLabels(monthLabels);
         setTotalLineChartData(result);
         return result;
+    }
+
+    const handleShowLabelsCheckboxChange = (e) => {
+        setShowLabels(e.target.checked)
     }
 
     useEffect(() => {
@@ -98,8 +103,11 @@ function CloudUserChart(props) {
         plugins: {
             datalabels: {
                 display: function (context) {
-                    // return context.dataset.data[context.dataIndex] > 0;
-                    return false;
+                    if (showLabels) {
+                        return context.dataset.data[context.dataIndex] > 0;
+                    } else {
+                        return false;
+                    }
                 },
                 font: {
                     weight: 'bold'
@@ -164,7 +172,15 @@ function CloudUserChart(props) {
                     <Line data={lineData} options={lineOptions} />
                 </div>
             </div>
-            <hr/>
+            <div>
+                <FormControlLabel
+                    control={
+                        <Checkbox key={1} name="show_labels" onChange={handleShowLabelsCheckboxChange} />
+                    }
+                    label="show labels" key={1}
+                />
+            </div>
+            <hr />
             <div>
                 <TextField
                     id="start_date"
@@ -185,9 +201,9 @@ function CloudUserChart(props) {
                     sx={{ m: 1, width: 260 }}
                 />
             </div>
-            <CloudUserDoughnutLine cloudService={"IONQ"} start={startDate} end={endDate}/>
-            <CloudUserDoughnutLine cloudService={"DWAVE"} start={startDate} end={endDate}/>
-            <CloudUserDoughnutLine cloudService={"IBMQ"} start={startDate} end={endDate}/>
+            <CloudUserDoughnutLine cloudService={"IONQ"} start={startDate} end={endDate} showLabels={showLabels} />
+            <CloudUserDoughnutLine cloudService={"DWAVE"} start={startDate} end={endDate} showLabels={showLabels} />
+            <CloudUserDoughnutLine cloudService={"IBMQ"} start={startDate} end={endDate} showLabels={showLabels} />
             <IBMQInstitutionChart start={startDate} end={endDate} />
         </div>
     );

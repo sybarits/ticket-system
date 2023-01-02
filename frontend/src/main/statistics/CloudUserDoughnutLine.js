@@ -27,6 +27,7 @@ function CloudUserDoughnutLine(props) {
     const [lineChartData, setLineChartData] = useState([]);
     const [totalLineChartLabels, setTotalLineChartLabels] = useState([]);
     const cloudService = props.cloudService;
+    const showLabels = props.showLabels;
     let start, end;
     if (props.start.toString().length == 6) {
         start = props.start;
@@ -115,8 +116,11 @@ function CloudUserDoughnutLine(props) {
         plugins: {
             datalabels: {
                 display: function (context) {
-                    // return context.dataset.data[context.dataIndex] > 0;
-                    return false;
+                    if (showLabels) {
+                        return context.dataset.data[context.dataIndex] > 0;
+                    } else {
+                        return false;
+                    }
                 },
                 font: {
                     weight: 'bold'
