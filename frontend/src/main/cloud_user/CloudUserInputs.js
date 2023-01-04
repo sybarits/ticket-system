@@ -222,9 +222,11 @@ const CloudUserInputs = forwardRef((props, ref) => {
                             label="Cloud Service"
                             onChange={handleCloudSelectChange}
                         >
-                            <MenuItem value={"IBMQ"}>IBMQ</MenuItem>
-                            <MenuItem value={"IONQ"}>IonQ</MenuItem>
-                            <MenuItem value={"DWAVE"}>D-wave</MenuItem>
+                            {Var.getCloudServiceTypeList().map((service, index) => {
+                                return (
+                                    <MenuItem value={service}>{service}</MenuItem>
+                                )
+                            })}
                         </Select>
                         <input type="file" accept={".xlsx"} ref={fileInput} onChange={handleInputChange} style={{ display: "none" }} />
                         <Button onClick={(e) => { handleOnSubmit(e); }} variant="outlined" disabled={disable}>Upload xlsx</Button>
@@ -270,9 +272,11 @@ const CloudUserInputs = forwardRef((props, ref) => {
                             label="Cloud Service"
                             onChange={handleCloudSelectChange}
                         >
-                            <MenuItem value={"IBMQ"}>IBMQ</MenuItem>
-                            <MenuItem value={"IONQ"}>IonQ</MenuItem>
-                            <MenuItem value={"DWAVE"}>D-wave</MenuItem>
+                            {Var.getCloudServiceTypeList().map((service, index) => {
+                                return (
+                                    <MenuItem value={service}>{service}</MenuItem>
+                                )
+                            })}
                         </Select>
                     </FormControl>
                     <TextField

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import {TextField, Checkbox, FormControlLabel} from '@mui/material';
+import { TextField, Checkbox, FormControlLabel } from '@mui/material';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -29,15 +29,18 @@ function CloudUserChart(props) {
 
     ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels, Title, CategoryScale, LinearScale, PointElement, LineElement,);
     const [totalPieChartData, setTotalPieChartData] = useState([]);
-    const [totalLineChartData, setTotalLineChartData] = useState([]);
     const [totalLineChartLabels, setTotalLineChartLabels] = useState([]);
+    const [lineDataSets, setLineDataSets] = useState([]);
     const [startDate, setStartDate] = useState(0);
     const [endDate, setEndDate] = useState(0);
     const [showLabels, setShowLabels] = useState(false);
 
     const makeTotalPieChartData = (data) => {
         const cloudServiceList = Var.getCloudServiceTypeList();
-        const result = [0, 0, 0];
+        const result = [];
+        for (let i=0; i<cloudServiceList.length; i++) {
+            result.push(0);
+        }
         const len = data.length;
         for (let i = 0; i < len; i++) {
             result[cloudServiceList.indexOf(data[i].cloud_service)] += 1;
@@ -48,18 +51,31 @@ function CloudUserChart(props) {
 
     const makeApplicationLineChartData = (data) => {
         const cloudServiceList = Var.getCloudServiceTypeList();
-        const result = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
+        const lineChartData = [];
+        for (let i=0; i<cloudServiceList.length; i++) {
+            lineChartData.push([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        }
         const len = data.length;
         const monthLabels = Day.makeMonthLabels();
         for (let i = 0; i < len; i++) {
             const index = Day.getMonthIndex(monthLabels, data[i].application_date);
             if (index != -1) {
-                result[cloudServiceList.indexOf(data[i].cloud_service)][index] += 1;
+                lineChartData[cloudServiceList.indexOf(data[i].cloud_service)][index] += 1;
             }
         }
         setTotalLineChartLabels(monthLabels);
-        setTotalLineChartData(result);
-        return result;
+        const temp = [];
+        for (let i=0; i<lineChartData.length; i++) {
+            temp.push({
+                label: Var.getCloudServiceTypeList()[i],
+                data: lineChartData[i],
+                borderColor: Var.getLineColor()[cloudServiceList[i]],
+                backgroundColor: Var.getLineColor()[cloudServiceList[i]],
+                tension: 0.3,
+            })
+        }
+        setLineDataSets(temp);
+        return lineChartData;
     }
 
     const handleShowLabelsCheckboxChange = (e) => {
@@ -129,29 +145,7 @@ function CloudUserChart(props) {
 
     const lineData = {
         labels: totalLineChartLabels,
-        datasets: [
-            {
-                label: Var.getCloudServiceTypeList()[0],
-                data: totalLineChartData[0],
-                borderColor: 'rgb(0, 64, 178)',
-                backgroundColor: 'rgb(0,64,178)',
-                tension: 0.3,
-            },
-            {
-                label: Var.getCloudServiceTypeList()[1],
-                data: totalLineChartData[1],
-                borderColor: 'rgb(248, 155, 51)',
-                backgroundColor: 'rgb(248, 155, 51)',
-                tension: 0.3,
-            },
-            {
-                label: Var.getCloudServiceTypeList()[2],
-                data: totalLineChartData[2],
-                borderColor: 'rgb(23, 190, 187)',
-                backgroundColor: 'rgb(23, 190, 187)',
-                tension: 0.3,
-            },
-        ],
+        datasets: lineDataSets,
     }
 
 
@@ -201,9 +195,11 @@ function CloudUserChart(props) {
                     sx={{ m: 1, width: 260 }}
                 />
             </div>
-            <CloudUserDoughnutLine cloudService={"IONQ"} start={startDate} end={endDate} showLabels={showLabels} />
-            <CloudUserDoughnutLine cloudService={"DWAVE"} start={startDate} end={endDate} showLabels={showLabels} />
-            <CloudUserDoughnutLine cloudService={"IBMQ"} start={startDate} end={endDate} showLabels={showLabels} />
+            {Var.getCloudServiceTypeList().map((service, index) => {
+                return (
+                    <CloudUserDoughnutLine cloudService={service} start={startDate} end={endDate} showLabels={showLabels} />
+                )
+            })}
             <IBMQInstitutionChart start={startDate} end={endDate} />
         </div>
     );

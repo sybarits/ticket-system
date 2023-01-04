@@ -186,7 +186,7 @@ const CloudUser = forwardRef((props, ref) => {
     const handleSaveUser = (e) => {
         setUserSaveDialogOpen(true);
         setDisable(true);
-        
+
     }
 
     const handleCloudSelectChange = (e) => {
@@ -383,9 +383,11 @@ const CloudUser = forwardRef((props, ref) => {
                                 label="Cloud Service"
                                 onChange={handleCloudSelectChange}
                             >
-                                <MenuItem value={"IBMQ"}>IBMQ</MenuItem>
-                                <MenuItem value={"IONQ"}>IonQ</MenuItem>
-                                <MenuItem value={"DWAVE"}>D-wave</MenuItem>
+                                {Var.getCloudServiceTypeList().map((service, index) => {
+                                    return (
+                                        <MenuItem value={service}>{service}</MenuItem>
+                                    )
+                                })}
                             </Select>
                         </FormControl>
                         <TextField
